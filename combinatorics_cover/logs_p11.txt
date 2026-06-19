@@ -1,0 +1,42 @@
+============================================================
+Programa 5 - Cobertura de 11 elementos
+Universo U = {1..25}, candidatos S15, alvos S11
+Lower bound LP: |SB| >= 3,265
+============================================================
+
+[1/3] Gerando S15 (C(25,15) = 3,268,760 elementos)...
+      OK em 17.7s | memoria: 13.1 MB
+
+[2/3] Gerando S11 (C(25,11) = 4,457,400 elementos)...
+      OK em 22.3s | memoria: 17.8 MB
+
+[3/3] Executando Greedy Set Cover (p=11)...
+
+[Greedy] p=11 | |S15|=3,268,760 | |Sp|=4,457,400
+         Cobertura por X: C(15,11)=1,365
+         Extensoes por Y: C(14,4)=1,001
+         Lower bound |SB| >= 3,265
+
+  Construindo indices... OK (9.3s)
+  Estrategia: numpy argmax (1,365,000 updates/iter estimados)
+  iter=     1 | |SB|=     1 | cobertos=  0.0% | novos=1,365 | loop=5.3s | ETA=17404s
+  iter=     2 | |SB|=     2 | cobertos=  0.1% | novos=1,365 | loop=11.0s | ETA=17945s
+  iter=     3 | |SB|=     3 | cobertos=  0.1% | novos=1,365 | loop=21.7s | ETA=23590s
+  iter=     4 | |SB|=     4 | cobertos=  0.1% | novos=1,365 | loop=30.8s | ETA=25147s
+  iter=     5 | |SB|=     5 | cobertos=  0.2% | novos=1,365 | loop=36.1s | ETA=23571s
+  iter=     6 | |SB|=     6 | cobertos=  0.2% | novos=1,365 | loop=43.1s | ETA=23390s
+  iter=     7 | |SB|=     7 | cobertos=  0.2% | novos=1,365 | loop=50.0s | ETA=23280s
+  iter=     8 | |SB|=     8 | cobertos=  0.2% | novos=1,365 | loop=54.0s | ETA=21976s
+  iter=     9 | |SB|=     9 | cobertos=  0.3% | novos=1,365 | loop=58.8s | ETA=21273s
+  iter=    10 | |SB|=    10 | cobertos=  0.3% | novos=1,365 | loop=65.8s | ETA=21424s
+  iter=   100 | |SB|=   100 | cobertos=  3.1% | novos=1,362 | loop=800.4s | ETA=25391s
+  iter=   200 | |SB|=   200 | cobertos=  6.1% | novos=1,347 | loop=1629.7s | ETA=25320s
+  iter=   300 | |SB|=   300 | cobertos=  9.1% | novos=1,331 | loop=2137.4s | ETA=21688s
+  iter=   400 | |SB|=   400 | cobertos= 12.1% | novos=1,306 | loop=2490.0s | ETA=18684s
+  iter=   500 | |SB|=   500 | cobertos= 15.0% | novos=1,280 | loop=2774.9s | ETA=16435s
+  iter=   600 | |SB|=   600 | cobertos= 17.8% | novos=1,252 | loop=3122.7s | ETA=15231s
+  iter=   700 | |SB|=   700 | cobertos= 20.6% | novos=1,221 | loop=3508.4s | ETA=14533s
+  iter=   800 | |SB|=   800 | cobertos= 23.3% | novos=1,192 | loop=3792.2s | ETA=13599s
+  iter=   900 | |SB|=   900 | cobertos= 25.9% | novos=1,163 | loop=4178.1s | ETA=13180s
+  iter=  1000 | |SB|= 1,000 | cobertos= 28.5% | novos=1,132 | loop=4520.6s | ETA=12728s
+  iter=  1100 | |SB|= 1,100 | cobertos= 31.0% | novos=1,101 | loop=4806.1s | ETA=12205s

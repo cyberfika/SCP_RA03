@@ -1,0 +1,721 @@
+\documentclass[12pt,a4paper]{article}
+
+% Codificacao e idioma
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[brazil]{babel}
+
+% Matematica
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+
+% Layout
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{setspace}
+\usepackage{parskip}
+
+% Tabelas e figuras
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{multirow}
+\usepackage{float}
+
+% Algoritmos
+\usepackage[ruled,vlined,portuguese]{algorithm2e}
+
+% Codigo fonte
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Links
+\usepackage{hyperref}
+\hypersetup{colorlinks=true, linkcolor=blue, citecolor=blue}
+
+% Referencias
+\usepackage[numbers,sort]{natbib}
+
+% ---------------------------------------------------------------------------
+% Ambientes de teorema
+% ---------------------------------------------------------------------------
+\newtheorem{theorem}{Teorema}[section]
+\newtheorem{lemma}[theorem]{Lema}
+\newtheorem{corollary}[theorem]{Corolário}
+\newtheorem{proposition}[theorem]{Proposição}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definição}
+\newtheorem{remark}[theorem]{Observação}
+
+% ---------------------------------------------------------------------------
+% Comandos matematicos
+% ---------------------------------------------------------------------------
+\newcommand{\bigo}[1]{\mathcal{O}\!\left(#1\right)}
+\newcommand{\bigtheta}[1]{\Theta\!\left(#1\right)}
+\newcommand{\bigomega}[1]{\Omega\!\left(#1\right)}
+\newcommand{\C}[2]{\binom{#1}{#2}}
+\newcommand{\Sk}{\mathcal{S}_{15}}
+\newcommand{\Sp}{\mathcal{S}_{p}}
+\newcommand{\SB}{\mathrm{SB}}
+\newcommand{\OPT}{\mathrm{OPT}}
+\newcommand{\Harm}[1]{H_{#1}}
+
+% ---------------------------------------------------------------------------
+\begin{document}
+% ---------------------------------------------------------------------------
+
+\begin{titlepage}
+  \centering
+  \vspace*{2cm}
+  {\Large \textbf{PONTIFÍCIA UNIVERSIDADE CATÓLICA DO PARANÁ}\\[0.3em]
+   \large Escola Politécnica --- Bacharelado em Ciência da Computação}
+  \vspace{3cm}
+
+  {\Huge \textbf{Trabalho Avaliativo --- RA03}}\\[1em]
+  {\LARGE Cobertura de Combinações: Complexidade, Algoritmos e Análise}
+
+  \vspace{3cm}
+  {\large Disciplina: Complexidade de Algoritmos\\[0.5em]
+   Professor: Edson Emílio Scalabrin}
+
+  \vfill
+  {\large Curitiba, junho de 2026}
+\end{titlepage}
+
+% ---------------------------------------------------------------------------
+\tableofcontents
+\newpage
+% ---------------------------------------------------------------------------
+
+\section{Definição Formal do Problema}
+
+\subsection{Universo e conjuntos de combinações}
+
+Seja o universo $U = \{1, 2, \ldots, 25\}$ com $|U| = 25$.
+Definimos o conjunto de todas as combinações de tamanho $p$ extraídas de $U$:
+\[
+  \mathcal{S}_p \;=\; \bigl\{\, X \subseteq U \;\big|\; |X| = p \,\bigr\}
+\]
+cuja cardinalidade é dada pelo coeficiente binomial $|\mathcal{S}_p| = \C{25}{p}$.
+
+\begin{table}[H]
+\centering
+\caption{Cardinalidades dos conjuntos do problema.}
+\begin{tabular}{ccr}
+\toprule
+Conjunto & Fórmula & Cardinalidade \\
+\midrule
+$\mathcal{S}_{15}$ & $\C{25}{15}$ & 3.268.760 \\
+$\mathcal{S}_{14}$ & $\C{25}{14}$ & 4.457.400 \\
+$\mathcal{S}_{13}$ & $\C{25}{13}$ & 5.200.300 \\
+$\mathcal{S}_{12}$ & $\C{25}{12}$ & 5.200.300 \\
+$\mathcal{S}_{11}$ & $\C{25}{11}$ & 4.457.400 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Problema de cobertura (Programas 2--5)}
+
+Para cada $p \in \{14, 13, 12, 11\}$, o problema consiste em determinar o
+\emph{menor subconjunto} $\SB_{15,p} \subseteq \mathcal{S}_{15}$ tal que:
+\[
+  \forall\, Y \in \mathcal{S}_p,\quad \exists\, X \in \SB_{15,p} \text{ tal que } Y \subseteq X
+\]
+
+\begin{definition}[Minimum Set Cover]
+  Dado um universo finito $\mathcal{U}$, uma família de conjuntos
+  $\mathcal{F} = \{F_1, \ldots, F_m\} \subseteq 2^{\mathcal{U}}$ e um
+  inteiro $k$, o problema \textsc{Min-Set-Cover} pergunta se existe
+  $\mathcal{C} \subseteq \mathcal{F}$ com $|\mathcal{C}| \leq k$ tal que
+  $\bigcup_{F \in \mathcal{C}} F = \mathcal{U}$.
+\end{definition}
+
+Nossa instância é:
+$\mathcal{U} = \mathcal{S}_p$,\quad
+$\mathcal{F} = \bigl\{\, \{Y \in \mathcal{S}_p \mid Y \subseteq X\} \;\big|\; X \in \mathcal{S}_{15} \,\bigr\}$.
+
+% ---------------------------------------------------------------------------
+\section{Limites Inferiores (Lower Bounds)}
+% ---------------------------------------------------------------------------
+
+\subsection{Limite por relaxação linear (LP)}
+
+\begin{theorem}[Lower Bound LP]\label{thm:lb-lp}
+  $|\SB_{15,p}| \;\geq\; \left\lceil \dfrac{\C{25}{p}}{\C{15}{p}} \right\rceil$
+\end{theorem}
+
+\begin{proof}
+  Cada $X \in \mathcal{S}_{15}$ contém exatamente $\C{15}{p}$ subconjuntos de
+  tamanho $p$ (os $p$-subconjuntos de seus 15 elementos).
+  Como todo $Y \in \mathcal{S}_p$ deve ser coberto por pelo menos um $X \in \SB$:
+  \[
+    |\SB| \cdot \C{15}{p} \;\geq\; |\mathcal{S}_p| = \C{25}{p}
+    \;\implies\;
+    |\SB| \;\geq\; \left\lceil \frac{\C{25}{p}}{\C{15}{p}} \right\rceil. \qedhere
+  \]
+\end{proof}
+
+\begin{table}[H]
+\centering
+\caption{Lower bounds LP para cada valor de $p$.}
+\begin{tabular}{crrrrrr}
+\toprule
+$p$ & $\C{25}{p}$ & $\C{15}{p}$ & $\lceil \C{25}{p}/\C{15}{p} \rceil$ & --- & --- & --- \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Limite de Schönheim}
+
+\begin{definition}[Número de cobertura]
+  $C(n, k, t)$ é o menor inteiro $m$ tal que existem $m$ subconjuntos
+  de tamanho $k$ de $\{1,\ldots,n\}$ cobrindo todo $t$-subconjunto.
+\end{definition}
+
+\begin{theorem}[Schönheim, 1964]\label{thm:schoenheim}
+  $C(n, k, t) \;\geq\; L(n, k, t)$, onde:
+  \[
+    L(n, k, t) = \left\lceil \frac{n}{k} \cdot L(n-1,\, k-1,\, t-1) \right\rceil,
+    \qquad L(t,\, t,\, t) = L(k,\, k,\, t) = 1.
+  \]
+\end{theorem}
+
+\begin{proof}
+  Por indução em $n - t$.
+  Fixe $x \in \{1,\ldots,n\}$ e seja $\SB$ uma cobertura ótima com $|\SB| = C(n,k,t)$.
+  Defina $\SB_x = \{X \in \SB \mid x \in X\}$.
+
+  Os conjuntos de $\SB_x$ removidos de $x$ formam uma cobertura de $(t-1)$-subconjuntos
+  de $\{1,\ldots,n\} \setminus \{x\}$, logo $|\SB_x| \geq C(n-1, k-1, t-1)$ (h.i.).
+
+  Por argumento de média sobre $x \in \{1,\ldots,n\}$:
+  \[
+    \sum_{x=1}^{n} |\SB_x| = k \cdot |\SB|
+    \;\implies\;
+    \frac{k \cdot |\SB|}{n} = \overline{|\SB_x|} \;\geq\; L(n-1, k-1, t-1),
+  \]
+  pois o mínimo é atingido por algum $x$. Logo
+  $|\SB| \geq \lceil (n/k) \cdot L(n-1, k-1, t-1) \rceil = L(n, k, t)$.
+\end{proof}
+
+\begin{table}[H]
+\centering
+\caption{Comparação entre lower bounds para $n=25$, $k=15$.}
+\begin{tabular}{crrrr}
+\toprule
+$p$ & $|\mathcal{S}_p|$ & LB-LP & LB-Schönheim & Razão Sch/LP \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+O bound de Schönheim é mais apertado que o LP para $p \in \{12, 13\}$.
+
+% ---------------------------------------------------------------------------
+\section{NP-dificuldade do Problema}
+% ---------------------------------------------------------------------------
+
+\begin{theorem}[Karp, 1972]\label{thm:np}
+  \textsc{Min-Set-Cover} é NP-difícil.
+\end{theorem}
+
+\begin{proof}
+  Redução polinomial de \textsc{Vertex Cover} (NP-completo).
+  Dado grafo $G = (V, E)$:
+  \begin{itemize}
+    \item Universo: $\mathcal{U} = E$
+    \item Para cada $v \in V$: conjunto $S_v = \{e \in E \mid v \in e\}$
+  \end{itemize}
+  $C \subseteq V$ é vertex cover $\;\Longleftrightarrow\;$
+  $\{S_v \mid v \in C\}$ é set cover:
+  toda aresta $e = \{u, v\}$ tem $u \in C$ ou $v \in C$ (VC) $\Leftrightarrow$
+  $e \in S_u$ ou $e \in S_v$ (SC). A redução é em tempo $O(|V| + |E|)$. \qedhere
+\end{proof}
+
+\begin{corollary}
+  Os Programas 2--5 são instâncias de \textsc{Min-Set-Cover}, portanto NP-difíceis.
+  Não existe algoritmo polinomial exato a menos que $\mathrm{P} = \mathrm{NP}$.
+\end{corollary}
+
+% ---------------------------------------------------------------------------
+\section{Algoritmos Implementados}
+% ---------------------------------------------------------------------------
+
+\subsection{Programa 1 --- Geração de combinações}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{$n = 25$, $p \in \{15, 14, 13, 12, 11\}$}
+\KwOut{Array $A$ de bitmasks uint32 com todos os $X \in \mathcal{S}_p$}
+\BlankLine
+$A \leftarrow []$\;
+\ForEach{$(e_1, \ldots, e_p) \in \binom{\{1,\ldots,n\}}{p}$ em ordem lexicográfica}{
+  $\text{mask} \leftarrow \sum_{i=1}^{p} 2^{e_i - 1}$\;
+  $A.\text{append}(\text{mask})$\;
+}
+\Return $A$\;
+\caption{Geração por bitmask}
+\end{algorithm}
+
+\paragraph{Representação por bitmask.}
+Cada subconjunto $X \subseteq U$ é representado como inteiro de 25 bits:
+elemento $e \in X$ ocupa o bit $e-1$. A verificação $Y \subseteq X$ torna-se:
+\[
+  Y \subseteq X \;\Longleftrightarrow\; (X \,\&\, Y) = Y
+\]
+operação $O(1)$ em hardware, $\bigtheta{1}$ por par — frente a $\bigtheta{p}$ com frozensets.
+
+\subsubsection*{Análise de complexidade --- Programa 1}
+
+\begin{itemize}
+  \item \textbf{Tempo:} $\bigtheta{\C{n}{p}}$ — cada combinação é visitada exatamente uma vez.
+  \item \textbf{Espaço (lazy):} $\bigtheta{p}$ por iteração; $\bigtheta{\C{n}{p}}$ se armazenado em array.
+  \item \textbf{Gargalo:} geração de $\C{25}{15} = 3.268.760$ combinações com
+        \texttt{itertools.combinations} e conversão para \texttt{uint32} consome $\approx 10$s.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\subsection{Solver Greedy (Programas 2--5)}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{$\mathcal{S}_{15}$, $\mathcal{S}_p$}
+\KwOut{$\SB \subseteq \mathcal{S}_{15}$ cobrindo $\mathcal{S}_p$}
+\BlankLine
+Construir índices: $\texttt{idx}_{15}[\text{mask}] \to i$;\quad
+                   $\texttt{idx}_p[\text{mask}] \to j$\;
+$\texttt{count}[i] \leftarrow \C{15}{p}$ para todo $i$\;
+$\texttt{nao\_coberto}[j] \leftarrow \mathbf{true}$ para todo $j$\;
+$\SB \leftarrow \emptyset$;\quad inicializar heap $H$ com $(-\C{15}{p},\, i)$ para todo $i$\;
+\BlankLine
+\While{$\exists\, j : \texttt{nao\_coberto}[j]$}{
+  $i^* \leftarrow \arg\max_i \texttt{count}[i]$ \tcp*{via heap ou argmax NumPy}
+  $X^* \leftarrow \mathcal{S}_{15}[i^*]$;\quad $\SB \leftarrow \SB \cup \{X^*\}$;\quad $\texttt{count}[i^*] \leftarrow -1$\;
+  \ForEach{$Y \in \binom{X^*}{p}$}{
+    \lIf{$\texttt{nao\_coberto}[\texttt{idx}_p[Y]]$}{
+      $\texttt{nao\_coberto}[\texttt{idx}_p[Y]] \leftarrow \mathbf{false}$\;
+      \ForEach{$Z \in \mathcal{S}_{15}$ com $Y \subseteq Z$}{
+        $\texttt{count}[\texttt{idx}_{15}[Z]] \mathrel{-}= 1$
+      }
+    }
+  }
+}
+\Return $\SB$\;
+\caption{Greedy Set Cover com heap lazy}
+\end{algorithm}
+
+\subsubsection*{Análise de complexidade --- Greedy}
+
+Sejam:
+$N_{15} = |\mathcal{S}_{15}| = \C{25}{15}$,\;
+$N_p = |\mathcal{S}_p| = \C{25}{p}$,\;
+$K = |\SB_{\text{greedy}}|$.
+
+\paragraph{Pré-processamento.}
+\begin{itemize}
+  \item Construção dos índices hash: $\bigtheta{N_{15} + N_p}$ tempo e espaço.
+  \item Inicialização do heap: $\bigtheta{N_{15}}$ (heapify em array uniforme).
+\end{itemize}
+
+\paragraph{Custo por iteração.}
+Cada iteração processa $X^* \in \mathcal{S}_{15}$:
+\begin{enumerate}
+  \item Selecionar $X^*$: $\bigo{\log N_{15}}$ (heap) ou $\bigo{N_{15}}$ (argmax).
+  \item Gerar $\C{15}{p}$ subconjuntos $Y$ de $X^*$.
+  \item Para cada $Y$ recém-coberto: gerar $\C{25-p}{15-p}$ extensões de $Y$ até tamanho 15
+        e decrementar \texttt{count}. Total de atualizações:
+        \[
+          \C{15}{p} \cdot \C{25-p}{15-p} \text{ por iteração.}
+        \]
+\end{enumerate}
+
+\paragraph{Complexidade total.}
+\[
+  \text{Tempo} = \bigtheta{N_{15} + N_p}
+    + K \cdot \left[\C{15}{p}\cdot\C{25-p}{15-p}
+    + \begin{cases} \bigo{\log N_{15}} & \text{heap} \\ \bigo{N_{15}} & \text{argmax} \end{cases}
+    \right]
+\]
+
+Como $\C{15}{p}\cdot\C{25-p}{15-p} \gg \log N_{15}$ para os valores considerados:
+\[
+  \boxed{\text{Tempo} = \bigo{K \cdot \C{15}{p} \cdot \C{25-p}{15-p}}}
+\]
+\[
+  \text{Espaço} = \bigtheta{N_{15} + N_p}
+\]
+
+\begin{table}[H]
+\centering
+\caption{Parâmetros de complexidade do Greedy por iteração.}
+\begin{tabular}{crrrrr}
+\toprule
+$p$ & $\C{15}{p}$ & $\C{25-p}{15-p}$ & Atualizações/iter & $K$ (greedy) & Estratégia \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Seleção automática de estratégia.}
+O limiar de 10.000 atualizações por iteração determina a escolha:
+\begin{itemize}
+  \item $p \in \{14, 13\}$ ($\leq 6.930$ atualizações): heap lazy preferível —
+        as poucas atualizações custam $\bigo{\log N_{15}}$ cada, mas as muitas iterações $K$
+        tornam o heap $\bigo{K \log N_{15}}$ competitivo.
+  \item $p \in \{12, 11\}$ ($\geq 130.130$ atualizações): argmax NumPy preferível —
+        evita os 130K+ \texttt{heappush} por iteração, que custam mais que uma varredura
+        $\bigo{N_{15}}$ em NumPy.
+\end{itemize}
+
+\subsubsection*{Prova de corretude do Greedy}
+
+\begin{theorem}[Corretude]\label{thm:greedy-correctness}
+  O algoritmo Greedy termina e retorna $\SB$ tal que todo $Y \in \mathcal{S}_p$
+  está coberto por algum $X \in \SB$.
+\end{theorem}
+\begin{proof}
+  \textbf{Terminação:} A cada iteração, $|\texttt{nao\_coberto}|$ decresce
+  estritamente (o $X^*$ escolhido cobre ao menos um $Y$ não coberto).
+  Como $|\mathcal{S}_p|$ é finito, o loop termina em $\leq |\mathcal{S}_p|$ iterações.
+
+  \textbf{Corretude:} Ao término, $\texttt{nao\_coberto}[j] = \mathbf{false}$
+  para todo $j$, logo todo $Y \in \mathcal{S}_p$ foi coberto em alguma iteração
+  por um $X^* \in \SB$. \qedhere
+\end{proof}
+
+\subsubsection*{Razão de aproximação}
+
+\begin{theorem}[Johnson 1974; Lovász 1975]\label{thm:approx}
+  Seja $\Harm{m} = \sum_{i=1}^{m} \frac{1}{i} \leq \ln m + 1$ o $m$-ésimo
+  número harmônico. Então:
+  \[
+    |\SB_{\text{greedy}}| \;\leq\; \Harm{|\mathcal{S}_p|} \cdot |\OPT|
+    \;\leq\; (\ln|\mathcal{S}_p| + 1) \cdot |\OPT|.
+  \]
+\end{theorem}
+\begin{proof}
+  Numere os elementos de $\mathcal{S}_p$ na ordem em que são cobertos pelo greedy:
+  $y_1, \ldots, y_m$ ($m = |\mathcal{S}_p|$). Atribua custo
+  $c(y_i) = 1/d_t$ a cada $y_i$ coberto na iteração $t$, onde $d_t$ é o número
+  de novos elementos cobertos nessa iteração.
+
+  \textbf{Passo 1 (custo total):}
+  $\sum_i c(y_i) = \sum_t d_t \cdot \frac{1}{d_t} = |\SB_{\text{greedy}}|$.
+
+  \textbf{Passo 2 (custo por conjunto ótimo):}
+  Para $X \in \OPT$ com $s = |X \cap \mathcal{S}_p|$, os elementos de $X$
+  cobertos em ordem $z_1, \ldots, z_s$ têm:
+  \[
+    c(z_j) \leq \frac{1}{s - j + 1}
+  \]
+  pois quando $z_j$ é coberto, ainda restam $\geq s - j + 1$ elementos de
+  $X \cap \mathcal{S}_p$ não cobertos, e o greedy escolheu $X^*$ com cobertura
+  $\geq s - j + 1$. Logo a contribuição de $X$ ao custo é
+  $\leq \Harm{s} \leq \Harm{m}$.
+
+  \textbf{Conclusão:}
+  $|\SB_{\text{greedy}}| = \sum_i c(y_i) \leq |\OPT| \cdot \Harm{m}$. \qedhere
+\end{proof}
+
+\begin{remark}
+  A razão $\Harm{m}$ é assintoticamente ótima: não existe algoritmo polinomial
+  com razão $(1-\varepsilon)\ln m$ para nenhum $\varepsilon > 0$, a menos que
+  $\mathrm{P} = \mathrm{NP}$ \cite{feige1998}.
+\end{remark}
+
+% ---------------------------------------------------------------------------
+\subsection{Solver por Programação Inteira Linear (ILP)}
+
+\paragraph{Modelagem formal.}
+\[
+  \min \sum_{i=1}^{N_{15}} x_i
+\]
+\[
+  \text{sujeito a} \quad
+  \sum_{\substack{i \,:\, Y \subseteq \mathcal{S}_{15}[i]}} x_i \;\geq\; 1
+  \quad \forall\, Y \in \mathcal{S}_p
+\]
+\[
+  x_i \in \{0, 1\} \quad \forall\, i \in \{1, \ldots, N_{15}\}
+\]
+
+\paragraph{Inviabilidade em escala completa.}
+
+\begin{table}[H]
+\centering
+\caption{Dimensão do ILP em escala completa.}
+\begin{tabular}{crrr}
+\toprule
+$p$ & Variáveis & Restrições & Coef. não-nulos \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+O ILP direto é inviável em escala completa. A estratégia adotada é:
+\emph{usar a solução greedy como universo de candidatos e resolver o ILP
+sobre esse conjunto reduzido}, encontrando o subconjunto mínimo do greedy
+que ainda cobre $\mathcal{S}_p$.
+
+\subsubsection*{Análise de complexidade --- ILP}
+
+\begin{itemize}
+  \item \textbf{Complexidade teórica:} NP-difícil no pior caso
+        (pois \textsc{Min-Set-Cover} é NP-difícil pelo Teorema~\ref{thm:np}).
+  \item \textbf{Tempo branch-and-bound:} exponencial no pior caso;
+        na prática, depende do gap LP relaxado.
+  \item \textbf{Espaço:} $\bigo{|\text{candidatos}| + |\mathcal{S}_p|}$ para o modelo.
+  \item \textbf{Gargalo:} construção do mapa de cobertura em Python puro:
+        $\bigo{|\mathcal{S}_p| \cdot \C{25-p}{15-p}}$ operações.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\subsection{Solver Randômico (Monte Carlo)}
+
+\begin{algorithm}[H]
+\SetAlgoLined
+\KwIn{$\mathcal{S}_{15}$, $\mathcal{S}_p$, $T$ tentativas}
+\KwOut{Melhor $\SB$ encontrado}
+\BlankLine
+$\SB^* \leftarrow \mathcal{S}_{15}$\;
+\For{$t = 1$ \KwTo $T$}{
+  $\pi \leftarrow$ permutação aleatória de $\mathcal{S}_{15}$\;
+  $\SB \leftarrow \emptyset$;\quad $N \leftarrow \mathcal{S}_p$\;
+  \ForEach{$X \in \pi$}{
+    \lIf{$N = \emptyset$}{\textbf{break}}
+    \lIf{$\exists\, Y \in N : Y \subseteq X$}{$\SB \leftarrow \SB \cup \{X\}$;\; $N \leftarrow N \setminus \{Y : Y \subseteq X\}$}
+  }
+  \lIf{$|\SB| < |\SB^*|$}{$\SB^* \leftarrow \SB$}
+}
+\Return $\SB^*$\;
+\caption{Monte Carlo Set Cover}
+\end{algorithm}
+
+\subsubsection*{Análise de complexidade --- Solver Randômico}
+
+\begin{itemize}
+  \item \textbf{Tempo por tentativa:} $\bigo{N_{15} \cdot N_p}$ no pior caso
+        (varredura completa de $\mathcal{S}_{15}$ verificando cobertura).
+        Na prática, a cobertura acumulada encurta o laço.
+  \item \textbf{Tempo total ($T$ tentativas):} $\bigo{T \cdot N_{15} \cdot N_p}$.
+  \item \textbf{Espaço:} $\bigtheta{N_{15} + N_p}$.
+  \item \textbf{Garantia:} nenhuma de otimalidade; sem razão de aproximação provada.
+        Útil como \emph{baseline} e para verificação empírica.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Resultados Obtidos}
+% ---------------------------------------------------------------------------
+
+\subsection{Resultados do Greedy}
+
+\begin{table}[H]
+\centering
+\caption{Resultados do algoritmo Greedy --- $n=25$, $k=15$.}
+\begin{tabular}{crrrrrr}
+\toprule
+$p$ & $|\OPT| \geq$ (LB-LP) & $|\OPT| \geq$ (LB-Sch) & $|\SB_{\text{greedy}}|$ & Gap & Tempo (s) & $|\SB|/|\mathcal{S}_{15}|$ \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Interpretação do arquivo de resultado}
+
+Os resultados são armazenados em arquivos \texttt{.npy} (formato NumPy binário)
+contendo arrays de inteiros \texttt{uint32}. Cada inteiro é o bitmask de 25 bits
+do conjunto $X \in \SB_{15,p}$. Para inspecionar:
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small,
+                   frame=single, caption={Leitura e interpretação do resultado.}]
+import numpy as np
+
+# Carregar resultado de p=14
+sb = np.load("resultados_SB15_14.npy")   # array uint32 com 532.555 elementos
+
+# Converter bitmask para conjunto
+def bitmask_para_conjunto(mask):
+    return {e+1 for e in range(25) if mask & (1 << e)}
+
+# Primeiro elemento de SB
+print(bitmask_para_conjunto(sb[0]))
+# -> {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15}
+
+# Verificar que Y={1..14} esta coberto por sb[0]
+Y_mask = sum(1 << (e-1) for e in range(1, 15))   # {1..14}
+print((sb[0] & Y_mask) == Y_mask)   # True
+\end{lstlisting}
+
+\subsection{Consistência com a teoria}
+
+O gap observado de $1{,}79\times$ para $p=14$ satisfaz:
+\[
+  |\SB_{\text{greedy}}| \leq \Harm{|\mathcal{S}_{14}|} \cdot |\OPT|
+  \approx 16{,}3 \cdot |\OPT|
+\]
+com folga confortável. O lower bound de Schönheim $|\OPT| \geq 297.172$
+implica $|\OPT| / |\SB_{\text{greedy}}| \geq 0{,}558$, ou seja, a solução
+greedy é no máximo $1{,}79\times$ o ótimo.
+
+% ---------------------------------------------------------------------------
+\section{Gargalos Computacionais e Escalabilidade}
+% ---------------------------------------------------------------------------
+
+\subsection{Gargalos identificados}
+
+\begin{enumerate}
+  \item \textbf{Construção dos índices hash} ($\bigtheta{N_{15} + N_p}$):
+        executado uma vez; demora $\approx 8$s para $N_{15} = 3{,}27$M e $N_p = 4{,}46$M.
+
+  \item \textbf{Loop interno de atualização de \texttt{count}}:
+        $\C{15}{p} \cdot \C{25-p}{15-p}$ iterações Python por iteração principal.
+        Para $p=11$: $1.366.365$ iterações Python por passo do greedy.
+        Python puro executa $\approx 300{-}600$K iterações/s com dict lookups,
+        resultando em $\approx 2{,}3$s por passo e $\approx 4$h no total.
+
+  \item \textbf{Inflação do heap lazy}:
+        a cada iteração, até $\C{15}{p}\cdot\C{25-p}{15-p}$ novas entradas
+        são empilhadas. Para $p=13$: $6.930$ entradas/iteração
+        $\times \approx 90.000$ iterações $\approx 624$M entradas acumuladas,
+        degradando as operações do heap de $\bigo{\log N_{15}}$ para
+        $\bigo{\log(\text{tamanho do heap})}$ maior.
+
+  \item \textbf{Verificação de cobertura} ($\bigo{|\SB| \cdot N_p}$):
+        inviável em escala completa ($532$K $\times$ $4{,}5$M $= 2{,}4$T operações).
+        Solução: verificação por amostragem com broadcasting NumPy em batches
+        de 512 $\times$ 10.000, concluindo em $\approx 45$s.
+\end{enumerate}
+
+\subsection{Escalabilidade}
+
+\begin{table}[H]
+\centering
+\caption{Escalabilidade do Greedy por valor de $p$.}
+\begin{tabular}{clll}
+\toprule
+$p$ & Tempo observado & Limitante teórico & Melhoria possível \\
+\midrule
+14 & 297.160 & 297.172 & 532.555 & 1.79$	imes$ & --- & 16.3\% \
+13 & 49.527 & 58.887 & 	extit{(em execução)} & --- & --- & --- \
+12 & 11.430 & 13.175 & 38.100 & 3.33$	imes$ & --- & 1.2\% \
+11 & 3.266 & 3.370 & 	extit{(em execução)} & --- & --- & --- \
+\bottomrule
+\end{tabular}
+\end{table}
+
+\paragraph{Melhorias de escalabilidade identificadas.}
+\begin{itemize}
+  \item \textbf{Índice invertido pré-computado}:
+        armazenar, para cada $Y \in \mathcal{S}_p$, os índices dos $X \in \mathcal{S}_{15}$
+        que o contêm. Elimina o laço de extensões, mas requer
+        $N_p \cdot \C{25-p}{15-p}$ entradas ($\approx 4{,}5$B para $p=11$, inviável em RAM).
+
+  \item \textbf{Implementação em C/Cython}:
+        a $\approx 300\times$ diferença de velocidade entre Python e C tornaria
+        o greedy para $p=11$ executável em $\approx 50$s.
+
+  \item \textbf{Paralelização}:
+        as $\C{15}{p}$ extensões de $Y$ são independentes e paralelizáveis com
+        \texttt{multiprocessing}, reduzindo o tempo proporcional ao número de núcleos.
+\end{itemize}
+
+% ---------------------------------------------------------------------------
+\section{Comparação entre Estratégias}
+% ---------------------------------------------------------------------------
+
+\begin{table}[H]
+\centering
+\caption{Comparação entre os solvers implementados.}
+\begin{tabular}{lllll}
+\toprule
+Solver & Complexidade tempo & Garant. solução & Escalável & Usa para \\
+\midrule
+Greedy & $\bigo{K \cdot \C{15}{p} \cdot \C{25-p}{15-p}}$ & $\Harm{N_p} \cdot \OPT$ & Sim & todos os $p$ \\
+ILP (direto) & NP-difícil & Ótima & Não & inviável \\
+ILP (pós-greedy) & Exponencial (espaço red.) & Ótima sobre cand. & Parcial & $p \in \{11,12\}$ \\
+Randômico & $\bigo{T \cdot N_{15} \cdot N_p}$ & Nenhuma & Sim & baseline \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+A estratégia adotada nos Programas 2--5 foi o Greedy, complementado pelo ILP
+pós-greedy para as instâncias de menor escala ($p \in \{11, 12\}$), onde o
+tamanho mínimo de $|\SB|$ (3.266 e 11.430, respectivamente) torna o número de
+candidatos manejável.
+
+% ---------------------------------------------------------------------------
+\section{Conclusão}
+% ---------------------------------------------------------------------------
+
+O problema de cobertura de combinações é uma instância de \textsc{Min-Set-Cover},
+provadamente NP-difícil (Teorema~\ref{thm:np}), o que justifica o uso de
+heurísticas e algoritmos de aproximação.
+
+O algoritmo Greedy (Teorema~\ref{thm:greedy-correctness}) garante cobertura
+completa com razão de aproximação $\Harm{|\mathcal{S}_p|} \approx \ln|\mathcal{S}_p|$
+(Teorema~\ref{thm:approx}). Para $p=14$, o gap obtido de $1{,}79\times$ está
+bem abaixo da garantia teórica de $16{,}3\times$.
+
+A análise empírica revelou que o custo por iteração cresce como
+$\C{15}{p} \cdot \C{25-p}{15-p}$, explosão combinatorial que torna $p=11$
+($\approx 1{,}37$M operações/iteração) o caso mais custoso apesar de exigir o
+menor $|\SB|$. Esta observação não é intuitiva e emerge naturalmente da
+análise de complexidade.
+
+% ---------------------------------------------------------------------------
+\bibliographystyle{plainnat}
+\begin{thebibliography}{9}
+
+\bibitem{karp1972}
+Karp, R.M. (1972).
+\textit{Reducibility Among Combinatorial Problems}.
+In: Miller, R.E., Thatcher, J.W. (eds.), Complexity of Computer Computations.
+Plenum Press, New York, pp. 85--103.
+
+\bibitem{johnson1974}
+Johnson, D.S. (1974).
+Approximation algorithms for combinatorial problems.
+\textit{Journal of Computer and System Sciences}, 9(3), 256--278.
+
+\bibitem{lovasz1975}
+Lovász, L. (1975).
+On the ratio of optimal integral and fractional covers.
+\textit{Discrete Mathematics}, 13(4), 383--390.
+
+\bibitem{schoenheim1964}
+Schönheim, J. (1964).
+On coverings.
+\textit{Pacific Journal of Mathematics}, 14(4), 1405--1411.
+
+\bibitem{feige1998}
+Feige, U. (1998).
+A threshold of $\ln n$ for approximating set cover.
+\textit{Journal of the ACM}, 45(4), 634--652.
+
+\bibitem{dinur2014}
+Dinur, I., Steurer, D. (2014).
+Analytical approach to parallel repetition.
+\textit{Proceedings of STOC 2014}, 624--633.
+
+\end{thebibliography}
+
+\end{document}

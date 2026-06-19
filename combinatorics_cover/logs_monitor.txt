@@ -1,0 +1,212 @@
+Monitorando resultados (intervalo: 300s). Ctrl+C para parar.
+
+[19:27:56] Pendentes: 3/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: (pendente)
+  p=11: (pendente)
+  [p=14] Linha substituida.
+  [p=13] Linha substituida.
+  [p=12] Linha substituida.
+  [p=11] Linha substituida.
+
+[OK] ..\docs\relatorio.tex atualizado.
+  Aguardando 300s...
+
+[19:32:58] Pendentes: 3/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: (pendente)
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[19:37:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[19:42:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[19:47:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[19:52:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Linha substituida.
+  [p=13] Linha substituida.
+  [p=12] Linha substituida.
+  [p=11] Linha substituida.
+
+[OK] ..\docs\relatorio.tex atualizado.
+  Aguardando 300s...
+
+[19:57:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[20:02:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[20:07:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[20:12:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Linha substituida.
+  [p=13] Linha substituida.
+  [p=12] Linha substituida.
+  [p=11] Linha substituida.
+
+[OK] ..\docs\relatorio.tex atualizado.
+  Aguardando 300s...
+
+[20:17:58] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[20:22:59] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Linha substituida.
+  [p=12] Linha substituida.
+  [p=11] Linha substituida.
+
+[OK] ..\docs\relatorio.tex atualizado.
+  Aguardando 300s...
+
+[20:27:59] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Linha substituida.
+  [p=13] Linha substituida.
+  [p=12] Linha substituida.
+  [p=11] Linha substituida.
+
+[OK] ..\docs\relatorio.tex atualizado.
+  Aguardando 300s...
+
+[20:32:59] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+
+[20:37:59] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+

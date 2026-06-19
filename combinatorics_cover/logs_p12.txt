@@ -1,0 +1,430 @@
+============================================================
+Programa 4 - Cobertura de 12 elementos
+Universo U = {1..25}, candidatos S15, alvos S12
+Lower bound LP: |SB| >= 11,429
+============================================================
+
+[1/3] Gerando S15 (C(25,15) = 3,268,760 elementos)...
+      OK em 13.5s | memoria: 13.1 MB
+
+[2/3] Gerando S12 (C(25,12) = 5,200,300 elementos)...
+      OK em 17.5s | memoria: 20.8 MB
+
+[3/3] Executando Greedy Set Cover (p=12)...
+
+[Greedy] p=12 | |S15|=3,268,760 | |Sp|=5,200,300
+         Cobertura por X: C(15,12)=455
+         Extensoes por Y: C(13,3)=286
+         Lower bound |SB| >= 11,429
+
+  Construindo indices... OK (13.6s)
+  Estrategia: numpy argmax (129,675 updates/iter estimados)
+  iter=     1 | |SB|=     1 | cobertos=  0.0% | novos=  455 | loop=0.6s | ETA=6954s
+  iter=     2 | |SB|=     2 | cobertos=  0.0% | novos=  455 | loop=1.1s | ETA=6251s
+  iter=     3 | |SB|=     3 | cobertos=  0.0% | novos=  455 | loop=1.4s | ETA=5433s
+  iter=     4 | |SB|=     4 | cobertos=  0.0% | novos=  455 | loop=1.8s | ETA=5012s
+  iter=     5 | |SB|=     5 | cobertos=  0.0% | novos=  455 | loop=2.1s | ETA=4784s
+  iter=     6 | |SB|=     6 | cobertos=  0.1% | novos=  455 | loop=2.4s | ETA=4606s
+  iter=     7 | |SB|=     7 | cobertos=  0.1% | novos=  455 | loop=2.8s | ETA=4568s
+  iter=     8 | |SB|=     8 | cobertos=  0.1% | novos=  455 | loop=3.2s | ETA=4624s
+  iter=     9 | |SB|=     9 | cobertos=  0.1% | novos=  455 | loop=3.6s | ETA=4617s
+  iter=    10 | |SB|=    10 | cobertos=  0.1% | novos=  455 | loop=4.3s | ETA=4959s
+  iter=   100 | |SB|=   100 | cobertos=  0.9% | novos=  455 | loop=59.6s | ETA=6751s
+  iter=   200 | |SB|=   200 | cobertos=  1.7% | novos=  455 | loop=120.8s | ETA=6783s
+  iter=   300 | |SB|=   300 | cobertos=  2.6% | novos=  455 | loop=202.6s | ETA=7517s
+  iter=   400 | |SB|=   400 | cobertos=  3.5% | novos=  455 | loop=316.2s | ETA=8720s
+  iter=   500 | |SB|=   500 | cobertos=  4.4% | novos=  455 | loop=498.5s | ETA=10896s
+  iter=   600 | |SB|=   600 | cobertos=  5.2% | novos=  452 | loop=641.8s | ETA=11660s
+  iter=   700 | |SB|=   700 | cobertos=  6.1% | novos=  450 | loop=716.0s | ETA=11097s
+  iter=   800 | |SB|=   800 | cobertos=  7.0% | novos=  448 | loop=796.5s | ETA=10751s
+  iter=   900 | |SB|=   900 | cobertos=  7.8% | novos=  446 | loop=867.5s | ETA=10358s
+  iter=  1000 | |SB|= 1,000 | cobertos=  8.7% | novos=  444 | loop=964.9s | ETA=10319s
+  iter=  1100 | |SB|= 1,100 | cobertos=  9.5% | novos=  442 | loop=1025.5s | ETA=9922s
+  iter=  1200 | |SB|= 1,200 | cobertos= 10.4% | novos=  440 | loop=1085.2s | ETA=9578s
+  iter=  1300 | |SB|= 1,300 | cobertos= 11.2% | novos=  438 | loop=1163.3s | ETA=9431s
+  iter=  1400 | |SB|= 1,400 | cobertos= 12.1% | novos=  436 | loop=1262.4s | ETA=9456s
+  iter=  1500 | |SB|= 1,500 | cobertos= 12.9% | novos=  434 | loop=1329.1s | ETA=9246s
+  iter=  1600 | |SB|= 1,600 | cobertos= 13.7% | novos=  431 | loop=1394.0s | ETA=9068s
+  iter=  1700 | |SB|= 1,700 | cobertos= 14.6% | novos=  429 | loop=1468.7s | ETA=8947s
+  iter=  1800 | |SB|= 1,800 | cobertos= 15.4% | novos=  427 | loop=1559.6s | ETA=8928s
+  iter=  1900 | |SB|= 1,900 | cobertos= 16.2% | novos=  425 | loop=1646.4s | ETA=8884s
+  iter=  2000 | |SB|= 2,000 | cobertos= 17.0% | novos=  422 | loop=1711.5s | ETA=8749s
+  iter=  2100 | |SB|= 2,100 | cobertos= 17.8% | novos=  420 | loop=1777.3s | ETA=8610s
+  iter=  2200 | |SB|= 2,200 | cobertos= 18.6% | novos=  418 | loop=1823.0s | ETA=8387s
+  iter=  2300 | |SB|= 2,300 | cobertos= 19.4% | novos=  416 | loop=1862.2s | ETA=8153s
+  iter=  2400 | |SB|= 2,400 | cobertos= 20.2% | novos=  414 | loop=1900.8s | ETA=7934s
+  iter=  2500 | |SB|= 2,500 | cobertos= 21.0% | novos=  411 | loop=1946.3s | ETA=7778s
+  iter=  2600 | |SB|= 2,600 | cobertos= 21.8% | novos=  409 | loop=1974.9s | ETA=7550s
+  iter=  2700 | |SB|= 2,700 | cobertos= 22.6% | novos=  406 | loop=2008.9s | ETA=7375s
+  iter=  2800 | |SB|= 2,800 | cobertos= 23.4% | novos=  404 | loop=2040.9s | ETA=7188s
+  iter=  2900 | |SB|= 2,900 | cobertos= 24.2% | novos=  401 | loop=2077.9s | ETA=7047s
+  iter=  3000 | |SB|= 3,000 | cobertos= 24.9% | novos=  399 | loop=2116.9s | ETA=6904s
+  iter=  3100 | |SB|= 3,100 | cobertos= 25.7% | novos=  396 | loop=2153.6s | ETA=6779s
+  iter=  3200 | |SB|= 3,200 | cobertos= 26.5% | novos=  393 | loop=2187.6s | ETA=6653s
+  iter=  3300 | |SB|= 3,300 | cobertos= 27.2% | novos=  391 | loop=2218.9s | ETA=6510s
+  iter=  3400 | |SB|= 3,400 | cobertos= 28.0% | novos=  387 | loop=2249.4s | ETA=6404s
+  iter=  3500 | |SB|= 3,500 | cobertos= 28.7% | novos=  385 | loop=2287.8s | ETA=6295s
+  iter=  3600 | |SB|= 3,600 | cobertos= 29.4% | novos=  382 | loop=2320.4s | ETA=6191s
+  iter=  3700 | |SB|= 3,700 | cobertos= 30.2% | novos=  379 | loop=2355.9s | ETA=6101s
+  iter=  3800 | |SB|= 3,800 | cobertos= 30.9% | novos=  376 | loop=2377.2s | ETA=5979s
+  iter=  3900 | |SB|= 3,900 | cobertos= 31.6% | novos=  373 | loop=2398.4s | ETA=5863s
+  iter=  4000 | |SB|= 4,000 | cobertos= 32.3% | novos=  370 | loop=2419.2s | ETA=5752s
+  iter=  4100 | |SB|= 4,100 | cobertos= 33.0% | novos=  368 | loop=2440.6s | ETA=5632s
+  iter=  4200 | |SB|= 4,200 | cobertos= 33.7% | novos=  365 | loop=2461.3s | ETA=5532s
+  iter=  4300 | |SB|= 4,300 | cobertos= 34.4% | novos=  362 | loop=2481.1s | ETA=5434s
+  iter=  4400 | |SB|= 4,400 | cobertos= 35.1% | novos=  359 | loop=2501.6s | ETA=5342s
+  iter=  4500 | |SB|= 4,500 | cobertos= 35.8% | novos=  356 | loop=2521.9s | ETA=5254s
+  iter=  4600 | |SB|= 4,600 | cobertos= 36.5% | novos=  353 | loop=2541.5s | ETA=5168s
+  iter=  4700 | |SB|= 4,700 | cobertos= 37.2% | novos=  351 | loop=2562.2s | ETA=5073s
+  iter=  4800 | |SB|= 4,800 | cobertos= 37.9% | novos=  347 | loop=2582.4s | ETA=5011s
+  iter=  4900 | |SB|= 4,900 | cobertos= 38.5% | novos=  344 | loop=2601.8s | ETA=4935s
+  iter=  5000 | |SB|= 5,000 | cobertos= 39.2% | novos=  342 | loop=2621.1s | ETA=4848s
+  iter=  5100 | |SB|= 5,100 | cobertos= 39.8% | novos=  339 | loop=2641.4s | ETA=4780s
+  iter=  5200 | |SB|= 5,200 | cobertos= 40.5% | novos=  336 | loop=2662.3s | ETA=4716s
+  iter=  5300 | |SB|= 5,300 | cobertos= 41.1% | novos=  333 | loop=2681.3s | ETA=4651s
+  iter=  5400 | |SB|= 5,400 | cobertos= 41.8% | novos=  330 | loop=2699.4s | ETA=4588s
+  iter=  5500 | |SB|= 5,500 | cobertos= 42.4% | novos=  328 | loop=2717.6s | ETA=4513s
+  iter=  5600 | |SB|= 5,600 | cobertos= 43.0% | novos=  325 | loop=2736.1s | ETA=4455s
+  iter=  5700 | |SB|= 5,700 | cobertos= 43.6% | novos=  322 | loop=2753.6s | ETA=4397s
+  iter=  5800 | |SB|= 5,800 | cobertos= 44.3% | novos=  319 | loop=2772.0s | ETA=4343s
+  iter=  5900 | |SB|= 5,900 | cobertos= 44.9% | novos=  316 | loop=2789.7s | ETA=4290s
+  iter=  6000 | |SB|= 6,000 | cobertos= 45.5% | novos=  313 | loop=2811.1s | ETA=4244s
+  iter=  6100 | |SB|= 6,100 | cobertos= 46.1% | novos=  311 | loop=2830.2s | ETA=4183s
+  iter=  6200 | |SB|= 6,200 | cobertos= 46.7% | novos=  308 | loop=2849.9s | ETA=4139s
+  iter=  6300 | |SB|= 6,300 | cobertos= 47.3% | novos=  305 | loop=2872.8s | ETA=4100s
+  iter=  6400 | |SB|= 6,400 | cobertos= 47.8% | novos=  303 | loop=2891.6s | ETA=4044s
+  iter=  6500 | |SB|= 6,500 | cobertos= 48.4% | novos=  300 | loop=2909.1s | ETA=4001s
+  iter=  6600 | |SB|= 6,600 | cobertos= 49.0% | novos=  297 | loop=2927.9s | ETA=3961s
+  iter=  6700 | |SB|= 6,700 | cobertos= 49.6% | novos=  295 | loop=2949.8s | ETA=3914s
+  iter=  6800 | |SB|= 6,800 | cobertos= 50.1% | novos=  292 | loop=2971.4s | ETA=3881s
+  iter=  6900 | |SB|= 6,900 | cobertos= 50.7% | novos=  289 | loop=2990.3s | ETA=3845s
+  iter=  7000 | |SB|= 7,000 | cobertos= 51.2% | novos=  286 | loop=3009.3s | ETA=3811s
+  iter=  7100 | |SB|= 7,100 | cobertos= 51.8% | novos=  284 | loop=3029.8s | ETA=3767s
+  iter=  7200 | |SB|= 7,200 | cobertos= 52.3% | novos=  282 | loop=3054.0s | ETA=3728s
+  iter=  7300 | |SB|= 7,300 | cobertos= 52.9% | novos=  279 | loop=3078.3s | ETA=3704s
+  iter=  7400 | |SB|= 7,400 | cobertos= 53.4% | novos=  276 | loop=3098.5s | ETA=3676s
+  iter=  7500 | |SB|= 7,500 | cobertos= 53.9% | novos=  274 | loop=3118.2s | ETA=3635s
+  iter=  7600 | |SB|= 7,600 | cobertos= 54.5% | novos=  271 | loop=3141.3s | ETA=3612s
+  iter=  7700 | |SB|= 7,700 | cobertos= 55.0% | novos=  269 | loop=3162.0s | ETA=3574s
+  iter=  7800 | |SB|= 7,800 | cobertos= 55.5% | novos=  266 | loop=3179.0s | ETA=3546s
+  iter=  7900 | |SB|= 7,900 | cobertos= 56.0% | novos=  264 | loop=3204.2s | ETA=3515s
+  iter=  8000 | |SB|= 8,000 | cobertos= 56.5% | novos=  261 | loop=3224.1s | ETA=3492s
+  iter=  8100 | |SB|= 8,100 | cobertos= 57.0% | novos=  259 | loop=3246.1s | ETA=3459s
+  iter=  8200 | |SB|= 8,200 | cobertos= 57.5% | novos=  256 | loop=3267.3s | ETA=3439s
+  iter=  8300 | |SB|= 8,300 | cobertos= 58.0% | novos=  254 | loop=3295.2s | ETA=3414s
+  iter=  8400 | |SB|= 8,400 | cobertos= 58.5% | novos=  251 | loop=3315.5s | ETA=3395s
+  iter=  8500 | |SB|= 8,500 | cobertos= 59.0% | novos=  249 | loop=3334.6s | ETA=3362s
+  iter=  8600 | |SB|= 8,600 | cobertos= 59.4% | novos=  247 | loop=3352.5s | ETA=3329s
+  iter=  8700 | |SB|= 8,700 | cobertos= 59.9% | novos=  244 | loop=3375.7s | ETA=3315s
+  iter=  8800 | |SB|= 8,800 | cobertos= 60.4% | novos=  242 | loop=3397.9s | ETA=3287s
+  iter=  8900 | |SB|= 8,900 | cobertos= 60.8% | novos=  240 | loop=3421.6s | ETA=3262s
+  iter=  9000 | |SB|= 9,000 | cobertos= 61.3% | novos=  237 | loop=3443.3s | ETA=3249s
+  iter=  9100 | |SB|= 9,100 | cobertos= 61.8% | novos=  235 | loop=3467.9s | ETA=3225s
+  iter=  9200 | |SB|= 9,200 | cobertos= 62.2% | novos=  232 | loop=3480.4s | ETA=3205s
+  iter=  9300 | |SB|= 9,300 | cobertos= 62.6% | novos=  230 | loop=3493.8s | ETA=3173s
+  iter=  9400 | |SB|= 9,400 | cobertos= 63.1% | novos=  228 | loop=3507.6s | ETA=3141s
+  iter=  9500 | |SB|= 9,500 | cobertos= 63.5% | novos=  226 | loop=3520.1s | ETA=3110s
+  iter=  9600 | |SB|= 9,600 | cobertos= 64.0% | novos=  224 | loop=3533.1s | ETA=3079s
+  iter=  9700 | |SB|= 9,700 | cobertos= 64.4% | novos=  221 | loop=3546.4s | ETA=3064s
+  iter=  9800 | |SB|= 9,800 | cobertos= 64.8% | novos=  219 | loop=3560.4s | ETA=3036s
+  iter=  9900 | |SB|= 9,900 | cobertos= 65.2% | novos=  217 | loop=3573.6s | ETA=3008s
+  iter= 10000 | |SB|=10,000 | cobertos= 65.6% | novos=  215 | loop=3586.7s | ETA=2980s
+  iter= 10100 | |SB|=10,100 | cobertos= 66.1% | novos=  213 | loop=3599.8s | ETA=2953s
+  iter= 10200 | |SB|=10,200 | cobertos= 66.5% | novos=  211 | loop=3611.8s | ETA=2927s
+  iter= 10300 | |SB|=10,300 | cobertos= 66.9% | novos=  209 | loop=3628.8s | ETA=2904s
+  iter= 10400 | |SB|=10,400 | cobertos= 67.3% | novos=  207 | loop=3643.3s | ETA=2881s
+  iter= 10500 | |SB|=10,500 | cobertos= 67.7% | novos=  205 | loop=3655.8s | ETA=2856s
+  iter= 10600 | |SB|=10,600 | cobertos= 68.1% | novos=  203 | loop=3667.9s | ETA=2832s
+  iter= 10700 | |SB|=10,700 | cobertos= 68.4% | novos=  200 | loop=3680.5s | ETA=2822s
+  iter= 10800 | |SB|=10,800 | cobertos= 68.8% | novos=  198 | loop=3692.8s | ETA=2799s
+  iter= 10900 | |SB|=10,900 | cobertos= 69.2% | novos=  196 | loop=3704.1s | ETA=2776s
+  iter= 11000 | |SB|=11,000 | cobertos= 69.6% | novos=  194 | loop=3717.0s | ETA=2755s
+  iter= 11100 | |SB|=11,100 | cobertos= 70.0% | novos=  192 | loop=3728.1s | ETA=2733s
+  iter= 11200 | |SB|=11,200 | cobertos= 70.3% | novos=  191 | loop=3740.0s | ETA=2698s
+  iter= 11300 | |SB|=11,300 | cobertos= 70.7% | novos=  189 | loop=3750.8s | ETA=2677s
+  iter= 11400 | |SB|=11,400 | cobertos= 71.0% | novos=  187 | loop=3761.1s | ETA=2656s
+  iter= 11500 | |SB|=11,500 | cobertos= 71.4% | novos=  185 | loop=3772.1s | ETA=2636s
+  iter= 11600 | |SB|=11,600 | cobertos= 71.8% | novos=  183 | loop=3782.1s | ETA=2617s
+  iter= 11700 | |SB|=11,700 | cobertos= 72.1% | novos=  181 | loop=3791.8s | ETA=2597s
+  iter= 11800 | |SB|=11,800 | cobertos= 72.5% | novos=  179 | loop=3803.2s | ETA=2579s
+  iter= 11900 | |SB|=11,900 | cobertos= 72.8% | novos=  178 | loop=3812.9s | ETA=2546s
+  iter= 12000 | |SB|=12,000 | cobertos= 73.1% | novos=  176 | loop=3822.5s | ETA=2528s
+  iter= 12100 | |SB|=12,100 | cobertos= 73.5% | novos=  174 | loop=3833.2s | ETA=2511s
+  iter= 12200 | |SB|=12,200 | cobertos= 73.8% | novos=  172 | loop=3844.2s | ETA=2495s
+  iter= 12300 | |SB|=12,300 | cobertos= 74.1% | novos=  170 | loop=3854.1s | ETA=2479s
+  iter= 12400 | |SB|=12,400 | cobertos= 74.5% | novos=  169 | loop=3864.0s | ETA=2449s
+  iter= 12500 | |SB|=12,500 | cobertos= 74.8% | novos=  167 | loop=3873.2s | ETA=2433s
+  iter= 12600 | |SB|=12,600 | cobertos= 75.1% | novos=  165 | loop=3882.4s | ETA=2418s
+  iter= 12700 | |SB|=12,700 | cobertos= 75.4% | novos=  163 | loop=3893.6s | ETA=2404s
+  iter= 12800 | |SB|=12,800 | cobertos= 75.7% | novos=  161 | loop=3905.4s | ETA=2392s
+  iter= 12900 | |SB|=12,900 | cobertos= 76.0% | novos=  160 | loop=3916.6s | ETA=2364s
+  iter= 13000 | |SB|=13,000 | cobertos= 76.3% | novos=  158 | loop=3928.4s | ETA=2353s
+  iter= 13100 | |SB|=13,100 | cobertos= 76.6% | novos=  156 | loop=3945.8s | ETA=2345s
+  iter= 13200 | |SB|=13,200 | cobertos= 76.9% | novos=  155 | loop=3961.3s | ETA=2321s
+  iter= 13300 | |SB|=13,300 | cobertos= 77.2% | novos=  153 | loop=3975.4s | ETA=2312s
+  iter= 13400 | |SB|=13,400 | cobertos= 77.5% | novos=  151 | loop=3989.8s | ETA=2303s
+  iter= 13500 | |SB|=13,500 | cobertos= 77.8% | novos=  150 | loop=4005.1s | ETA=2281s
+  iter= 13600 | |SB|=13,600 | cobertos= 78.1% | novos=  148 | loop=4022.5s | ETA=2275s
+  iter= 13700 | |SB|=13,700 | cobertos= 78.4% | novos=  147 | loop=4038.7s | ETA=2253s
+  iter= 13800 | |SB|=13,800 | cobertos= 78.7% | novos=  145 | loop=4053.0s | ETA=2246s
+  iter= 13900 | |SB|=13,900 | cobertos= 79.0% | novos=  144 | loop=4063.8s | ETA=2222s
+  iter= 14000 | |SB|=14,000 | cobertos= 79.2% | novos=  142 | loop=4075.9s | ETA=2215s
+  iter= 14100 | |SB|=14,100 | cobertos= 79.5% | novos=  140 | loop=4087.0s | ETA=2207s
+  iter= 14200 | |SB|=14,200 | cobertos= 79.8% | novos=  139 | loop=4096.9s | ETA=2184s
+  iter= 14300 | |SB|=14,300 | cobertos= 80.0% | novos=  138 | loop=4108.4s | ETA=2162s
+  iter= 14400 | |SB|=14,400 | cobertos= 80.3% | novos=  136 | loop=4118.8s | ETA=2155s
+  iter= 14500 | |SB|=14,500 | cobertos= 80.6% | novos=  134 | loop=4129.6s | ETA=2149s
+  iter= 14600 | |SB|=14,600 | cobertos= 80.8% | novos=  133 | loop=4145.2s | ETA=2130s
+  iter= 14700 | |SB|=14,700 | cobertos= 81.1% | novos=  131 | loop=4157.5s | ETA=2125s
+  iter= 14800 | |SB|=14,800 | cobertos= 81.3% | novos=  130 | loop=4168.6s | ETA=2105s
+  iter= 14900 | |SB|=14,900 | cobertos= 81.6% | novos=  129 | loop=4181.8s | ETA=2085s
+  iter= 15000 | |SB|=15,000 | cobertos= 81.8% | novos=  127 | loop=4195.3s | ETA=2083s
+  iter= 15100 | |SB|=15,100 | cobertos= 82.1% | novos=  126 | loop=4209.5s | ETA=2064s
+  iter= 15200 | |SB|=15,200 | cobertos= 82.3% | novos=  124 | loop=4220.9s | ETA=2061s
+  iter= 15300 | |SB|=15,300 | cobertos= 82.5% | novos=  123 | loop=4234.1s | ETA=2043s
+  iter= 15400 | |SB|=15,400 | cobertos= 82.8% | novos=  122 | loop=4252.5s | ETA=2028s
+  iter= 15500 | |SB|=15,500 | cobertos= 83.0% | novos=  120 | loop=4267.7s | ETA=2028s
+  iter= 15600 | |SB|=15,600 | cobertos= 83.2% | novos=  119 | loop=4277.7s | ETA=2009s
+  iter= 15700 | |SB|=15,700 | cobertos= 83.5% | novos=  118 | loop=4290.1s | ETA=1991s
+  iter= 15800 | |SB|=15,800 | cobertos= 83.7% | novos=  116 | loop=4304.1s | ETA=1992s
+  iter= 15900 | |SB|=15,900 | cobertos= 83.9% | novos=  115 | loop=4315.3s | ETA=1975s
+  iter= 16000 | |SB|=16,000 | cobertos= 84.1% | novos=  114 | loop=4324.3s | ETA=1957s
+  iter= 16100 | |SB|=16,100 | cobertos= 84.3% | novos=  112 | loop=4331.7s | ETA=1955s
+  iter= 16200 | |SB|=16,200 | cobertos= 84.6% | novos=  111 | loop=4338.8s | ETA=1937s
+  iter= 16300 | |SB|=16,300 | cobertos= 84.8% | novos=  110 | loop=4345.7s | ETA=1919s
+  iter= 16400 | |SB|=16,400 | cobertos= 85.0% | novos=  109 | loop=4353.7s | ETA=1902s
+  iter= 16500 | |SB|=16,500 | cobertos= 85.2% | novos=  107 | loop=4360.5s | ETA=1902s
+  iter= 16600 | |SB|=16,600 | cobertos= 85.4% | novos=  106 | loop=4367.2s | ETA=1884s
+  iter= 16700 | |SB|=16,700 | cobertos= 85.6% | novos=  105 | loop=4374.1s | ETA=1868s
+  iter= 16800 | |SB|=16,800 | cobertos= 85.8% | novos=  104 | loop=4380.9s | ETA=1851s
+  iter= 16900 | |SB|=16,900 | cobertos= 86.0% | novos=  103 | loop=4388.5s | ETA=1835s
+  iter= 17000 | |SB|=17,000 | cobertos= 86.2% | novos=  102 | loop=4395.2s | ETA=1819s
+  iter= 17100 | |SB|=17,100 | cobertos= 86.4% | novos=  100 | loop=4402.1s | ETA=1822s
+  iter= 17200 | |SB|=17,200 | cobertos= 86.6% | novos=   99 | loop=4408.7s | ETA=1806s
+  iter= 17300 | |SB|=17,300 | cobertos= 86.8% | novos=   98 | loop=4416.2s | ETA=1791s
+  iter= 17400 | |SB|=17,400 | cobertos= 87.0% | novos=   97 | loop=4422.7s | ETA=1777s
+  iter= 17500 | |SB|=17,500 | cobertos= 87.1% | novos=   96 | loop=4428.8s | ETA=1762s
+  iter= 17600 | |SB|=17,600 | cobertos= 87.3% | novos=   95 | loop=4435.1s | ETA=1748s
+  iter= 17700 | |SB|=17,700 | cobertos= 87.5% | novos=   94 | loop=4444.4s | ETA=1735s
+  iter= 17800 | |SB|=17,800 | cobertos= 87.7% | novos=   93 | loop=4450.7s | ETA=1721s
+  iter= 17900 | |SB|=17,900 | cobertos= 87.9% | novos=   91 | loop=4456.9s | ETA=1726s
+  iter= 18000 | |SB|=18,000 | cobertos= 88.0% | novos=   91 | loop=4463.3s | ETA=1694s
+  iter= 18100 | |SB|=18,100 | cobertos= 88.2% | novos=   89 | loop=4469.9s | ETA=1700s
+  iter= 18200 | |SB|=18,200 | cobertos= 88.4% | novos=   88 | loop=4476.9s | ETA=1688s
+  iter= 18300 | |SB|=18,300 | cobertos= 88.6% | novos=   87 | loop=4482.6s | ETA=1676s
+  iter= 18400 | |SB|=18,400 | cobertos= 88.7% | novos=   86 | loop=4488.1s | ETA=1663s
+  iter= 18500 | |SB|=18,500 | cobertos= 88.9% | novos=   85 | loop=4493.6s | ETA=1651s
+  iter= 18600 | |SB|=18,600 | cobertos= 89.1% | novos=   84 | loop=4500.4s | ETA=1640s
+  iter= 18700 | |SB|=18,700 | cobertos= 89.2% | novos=   83 | loop=4506.8s | ETA=1629s
+  iter= 18800 | |SB|=18,800 | cobertos= 89.4% | novos=   82 | loop=4513.4s | ETA=1618s
+  iter= 18900 | |SB|=18,900 | cobertos= 89.5% | novos=   81 | loop=4520.1s | ETA=1608s
+  iter= 19000 | |SB|=19,000 | cobertos= 89.7% | novos=   80 | loop=4526.2s | ETA=1598s
+  iter= 19100 | |SB|=19,100 | cobertos= 89.8% | novos=   79 | loop=4531.7s | ETA=1587s
+  iter= 19200 | |SB|=19,200 | cobertos= 90.0% | novos=   78 | loop=4538.1s | ETA=1578s
+  iter= 19300 | |SB|=19,300 | cobertos= 90.1% | novos=   77 | loop=4543.4s | ETA=1568s
+  iter= 19400 | |SB|=19,400 | cobertos= 90.3% | novos=   76 | loop=4548.4s | ETA=1559s
+  iter= 19500 | |SB|=19,500 | cobertos= 90.4% | novos=   75 | loop=4553.3s | ETA=1549s
+  iter= 19600 | |SB|=19,600 | cobertos= 90.6% | novos=   75 | loop=4558.5s | ETA=1520s
+  iter= 19700 | |SB|=19,700 | cobertos= 90.7% | novos=   74 | loop=4563.8s | ETA=1511s
+  iter= 19800 | |SB|=19,800 | cobertos= 90.9% | novos=   73 | loop=4570.5s | ETA=1503s
+  iter= 19900 | |SB|=19,900 | cobertos= 91.0% | novos=   72 | loop=4575.6s | ETA=1495s
+  iter= 20000 | |SB|=20,000 | cobertos= 91.1% | novos=   71 | loop=4580.6s | ETA=1487s
+  iter= 20100 | |SB|=20,100 | cobertos= 91.3% | novos=   70 | loop=4585.9s | ETA=1479s
+  iter= 20200 | |SB|=20,200 | cobertos= 91.4% | novos=   69 | loop=4590.6s | ETA=1472s
+  iter= 20300 | |SB|=20,300 | cobertos= 91.5% | novos=   68 | loop=4595.7s | ETA=1465s
+  iter= 20400 | |SB|=20,400 | cobertos= 91.7% | novos=   68 | loop=4600.3s | ETA=1437s
+  iter= 20500 | |SB|=20,500 | cobertos= 91.8% | novos=   67 | loop=4604.9s | ETA=1430s
+  iter= 20600 | |SB|=20,600 | cobertos= 91.9% | novos=   66 | loop=4609.0s | ETA=1423s
+  iter= 20700 | |SB|=20,700 | cobertos= 92.1% | novos=   65 | loop=4613.2s | ETA=1417s
+  iter= 20800 | |SB|=20,800 | cobertos= 92.2% | novos=   64 | loop=4617.2s | ETA=1411s
+  iter= 20900 | |SB|=20,900 | cobertos= 92.3% | novos=   64 | loop=4621.5s | ETA=1384s
+  iter= 21000 | |SB|=21,000 | cobertos= 92.4% | novos=   63 | loop=4625.8s | ETA=1378s
+  iter= 21100 | |SB|=21,100 | cobertos= 92.5% | novos=   62 | loop=4629.5s | ETA=1373s
+  iter= 21200 | |SB|=21,200 | cobertos= 92.7% | novos=   61 | loop=4634.7s | ETA=1368s
+  iter= 21300 | |SB|=21,300 | cobertos= 92.8% | novos=   60 | loop=4639.0s | ETA=1364s
+  iter= 21400 | |SB|=21,400 | cobertos= 92.9% | novos=   59 | loop=4643.3s | ETA=1360s
+  iter= 21500 | |SB|=21,500 | cobertos= 93.0% | novos=   59 | loop=4647.7s | ETA=1333s
+  iter= 21600 | |SB|=21,600 | cobertos= 93.1% | novos=   58 | loop=4651.4s | ETA=1329s
+  iter= 21700 | |SB|=21,700 | cobertos= 93.2% | novos=   57 | loop=4655.4s | ETA=1326s
+  iter= 21800 | |SB|=21,800 | cobertos= 93.3% | novos=   56 | loop=4658.9s | ETA=1323s
+  iter= 21900 | |SB|=21,900 | cobertos= 93.4% | novos=   56 | loop=4662.6s | ETA=1296s
+  iter= 22000 | |SB|=22,000 | cobertos= 93.5% | novos=   55 | loop=4666.4s | ETA=1294s
+  iter= 22100 | |SB|=22,100 | cobertos= 93.7% | novos=   54 | loop=4669.7s | ETA=1291s
+  iter= 22200 | |SB|=22,200 | cobertos= 93.8% | novos=   54 | loop=4673.2s | ETA=1265s
+  iter= 22300 | |SB|=22,300 | cobertos= 93.9% | novos=   53 | loop=4677.1s | ETA=1263s
+  iter= 22400 | |SB|=22,400 | cobertos= 94.0% | novos=   52 | loop=4680.9s | ETA=1262s
+  iter= 22500 | |SB|=22,500 | cobertos= 94.1% | novos=   52 | loop=4684.6s | ETA=1236s
+  iter= 22600 | |SB|=22,600 | cobertos= 94.2% | novos=   51 | loop=4687.9s | ETA=1235s
+  iter= 22700 | |SB|=22,700 | cobertos= 94.3% | novos=   50 | loop=4691.3s | ETA=1234s
+  iter= 22800 | |SB|=22,800 | cobertos= 94.4% | novos=   50 | loop=4694.5s | ETA=1209s
+  iter= 22900 | |SB|=22,900 | cobertos= 94.4% | novos=   49 | loop=4697.5s | ETA=1209s
+  iter= 23000 | |SB|=23,000 | cobertos= 94.5% | novos=   48 | loop=4700.6s | ETA=1208s
+  iter= 23100 | |SB|=23,100 | cobertos= 94.6% | novos=   48 | loop=4703.8s | ETA=1184s
+  iter= 23200 | |SB|=23,200 | cobertos= 94.7% | novos=   47 | loop=4706.9s | ETA=1184s
+  iter= 23300 | |SB|=23,300 | cobertos= 94.8% | novos=   46 | loop=4709.9s | ETA=1185s
+  iter= 23400 | |SB|=23,400 | cobertos= 94.9% | novos=   46 | loop=4712.6s | ETA=1160s
+  iter= 23500 | |SB|=23,500 | cobertos= 95.0% | novos=   45 | loop=4716.6s | ETA=1161s
+  iter= 23600 | |SB|=23,600 | cobertos= 95.1% | novos=   45 | loop=4719.5s | ETA=1137s
+  iter= 23700 | |SB|=23,700 | cobertos= 95.2% | novos=   44 | loop=4722.6s | ETA=1139s
+  iter= 23800 | |SB|=23,800 | cobertos= 95.2% | novos=   44 | loop=4726.0s | ETA=1115s
+  iter= 23900 | |SB|=23,900 | cobertos= 95.3% | novos=   43 | loop=4730.1s | ETA=1117s
+  iter= 24000 | |SB|=24,000 | cobertos= 95.4% | novos=   42 | loop=4733.8s | ETA=1120s
+  iter= 24100 | |SB|=24,100 | cobertos= 95.5% | novos=   42 | loop=4736.7s | ETA=1097s
+  iter= 24200 | |SB|=24,200 | cobertos= 95.6% | novos=   41 | loop=4739.6s | ETA=1100s
+  iter= 24300 | |SB|=24,300 | cobertos= 95.7% | novos=   41 | loop=4742.7s | ETA=1076s
+  iter= 24400 | |SB|=24,400 | cobertos= 95.7% | novos=   40 | loop=4746.8s | ETA=1080s
+  iter= 24500 | |SB|=24,500 | cobertos= 95.8% | novos=   39 | loop=4749.6s | ETA=1084s
+  iter= 24600 | |SB|=24,600 | cobertos= 95.9% | novos=   39 | loop=4752.8s | ETA=1061s
+  iter= 24700 | |SB|=24,700 | cobertos= 96.0% | novos=   38 | loop=4755.7s | ETA=1066s
+  iter= 24800 | |SB|=24,800 | cobertos= 96.0% | novos=   38 | loop=4758.4s | ETA=1043s
+  iter= 24900 | |SB|=24,900 | cobertos= 96.1% | novos=   37 | loop=4761.0s | ETA=1048s
+  iter= 25000 | |SB|=25,000 | cobertos= 96.2% | novos=   37 | loop=4763.9s | ETA=1025s
+  iter= 25100 | |SB|=25,100 | cobertos= 96.2% | novos=   36 | loop=4766.5s | ETA=1031s
+  iter= 25200 | |SB|=25,200 | cobertos= 96.3% | novos=   36 | loop=4770.0s | ETA=1009s
+  iter= 25300 | |SB|=25,300 | cobertos= 96.4% | novos=   35 | loop=4773.2s | ETA=1015s
+  iter= 25400 | |SB|=25,400 | cobertos= 96.4% | novos=   35 | loop=4777.2s | ETA=993s
+  iter= 25500 | |SB|=25,500 | cobertos= 96.5% | novos=   34 | loop=4779.7s | ETA=1000s
+  iter= 25600 | |SB|=25,600 | cobertos= 96.6% | novos=   34 | loop=4782.3s | ETA=977s
+  iter= 25700 | |SB|=25,700 | cobertos= 96.6% | novos=   33 | loop=4784.9s | ETA=985s
+  iter= 25800 | |SB|=25,800 | cobertos= 96.7% | novos=   33 | loop=4788.0s | ETA=963s
+  iter= 25900 | |SB|=25,900 | cobertos= 96.8% | novos=   32 | loop=4791.0s | ETA=971s
+  iter= 26000 | |SB|=26,000 | cobertos= 96.8% | novos=   32 | loop=4793.5s | ETA=949s
+  iter= 26100 | |SB|=26,100 | cobertos= 96.9% | novos=   31 | loop=4795.8s | ETA=958s
+  iter= 26200 | |SB|=26,200 | cobertos= 97.0% | novos=   31 | loop=4798.4s | ETA=936s
+  iter= 26300 | |SB|=26,300 | cobertos= 97.0% | novos=   30 | loop=4800.6s | ETA=946s
+  iter= 26400 | |SB|=26,400 | cobertos= 97.1% | novos=   30 | loop=4802.8s | ETA=924s
+  iter= 26500 | |SB|=26,500 | cobertos= 97.1% | novos=   30 | loop=4806.2s | ETA=903s
+  iter= 26600 | |SB|=26,600 | cobertos= 97.2% | novos=   29 | loop=4808.3s | ETA=913s
+  iter= 26700 | |SB|=26,700 | cobertos= 97.2% | novos=   29 | loop=4810.6s | ETA=892s
+  iter= 26800 | |SB|=26,800 | cobertos= 97.3% | novos=   28 | loop=4813.0s | ETA=903s
+  iter= 26900 | |SB|=26,900 | cobertos= 97.3% | novos=   28 | loop=4815.2s | ETA=882s
+  iter= 27000 | |SB|=27,000 | cobertos= 97.4% | novos=   28 | loop=4817.2s | ETA=861s
+  iter= 27100 | |SB|=27,100 | cobertos= 97.5% | novos=   27 | loop=4819.1s | ETA=872s
+  iter= 27200 | |SB|=27,200 | cobertos= 97.5% | novos=   27 | loop=4821.1s | ETA=852s
+  iter= 27300 | |SB|=27,300 | cobertos= 97.6% | novos=   26 | loop=4823.1s | ETA=863s
+  iter= 27400 | |SB|=27,400 | cobertos= 97.6% | novos=   26 | loop=4825.1s | ETA=843s
+  iter= 27500 | |SB|=27,500 | cobertos= 97.7% | novos=   26 | loop=4827.0s | ETA=823s
+  iter= 27600 | |SB|=27,600 | cobertos= 97.7% | novos=   25 | loop=4829.0s | ETA=835s
+  iter= 27700 | |SB|=27,700 | cobertos= 97.8% | novos=   25 | loop=4830.8s | ETA=815s
+  iter= 27800 | |SB|=27,800 | cobertos= 97.8% | novos=   24 | loop=4832.6s | ETA=828s
+  iter= 27900 | |SB|=27,900 | cobertos= 97.8% | novos=   24 | loop=4834.7s | ETA=808s
+  iter= 28000 | |SB|=28,000 | cobertos= 97.9% | novos=   24 | loop=4836.9s | ETA=789s
+  iter= 28100 | |SB|=28,100 | cobertos= 97.9% | novos=   23 | loop=4838.7s | ETA=803s
+  iter= 28200 | |SB|=28,200 | cobertos= 98.0% | novos=   23 | loop=4840.4s | ETA=783s
+  iter= 28300 | |SB|=28,300 | cobertos= 98.0% | novos=   23 | loop=4842.1s | ETA=763s
+  iter= 28400 | |SB|=28,400 | cobertos= 98.1% | novos=   22 | loop=4844.0s | ETA=778s
+  iter= 28500 | |SB|=28,500 | cobertos= 98.1% | novos=   22 | loop=4845.6s | ETA=759s
+  iter= 28600 | |SB|=28,600 | cobertos= 98.2% | novos=   22 | loop=4847.3s | ETA=739s
+  iter= 28700 | |SB|=28,700 | cobertos= 98.2% | novos=   21 | loop=4848.9s | ETA=755s
+  iter= 28800 | |SB|=28,800 | cobertos= 98.2% | novos=   21 | loop=4850.7s | ETA=736s
+  iter= 28900 | |SB|=28,900 | cobertos= 98.3% | novos=   21 | loop=4852.3s | ETA=717s
+  iter= 29000 | |SB|=29,000 | cobertos= 98.3% | novos=   20 | loop=4854.1s | ETA=734s
+  iter= 29100 | |SB|=29,100 | cobertos= 98.4% | novos=   20 | loop=4856.0s | ETA=715s
+  iter= 29200 | |SB|=29,200 | cobertos= 98.4% | novos=   20 | loop=4857.8s | ETA=696s
+  iter= 29300 | |SB|=29,300 | cobertos= 98.4% | novos=   19 | loop=4859.2s | ETA=713s
+  iter= 29400 | |SB|=29,400 | cobertos= 98.5% | novos=   19 | loop=4860.6s | ETA=695s
+  iter= 29500 | |SB|=29,500 | cobertos= 98.5% | novos=   19 | loop=4862.0s | ETA=676s
+  iter= 29600 | |SB|=29,600 | cobertos= 98.5% | novos=   18 | loop=4863.5s | ETA=694s
+  iter= 29700 | |SB|=29,700 | cobertos= 98.6% | novos=   18 | loop=4865.2s | ETA=676s
+  iter= 29800 | |SB|=29,800 | cobertos= 98.6% | novos=   18 | loop=4866.9s | ETA=657s
+  iter= 29900 | |SB|=29,900 | cobertos= 98.6% | novos=   17 | loop=4868.2s | ETA=677s
+  iter= 30000 | |SB|=30,000 | cobertos= 98.7% | novos=   17 | loop=4869.6s | ETA=658s
+  iter= 30100 | |SB|=30,100 | cobertos= 98.7% | novos=   17 | loop=4871.0s | ETA=640s
+  iter= 30200 | |SB|=30,200 | cobertos= 98.7% | novos=   17 | loop=4872.5s | ETA=622s
+  iter= 30300 | |SB|=30,300 | cobertos= 98.8% | novos=   16 | loop=4874.0s | ETA=643s
+  iter= 30400 | |SB|=30,400 | cobertos= 98.8% | novos=   16 | loop=4875.3s | ETA=625s
+  iter= 30500 | |SB|=30,500 | cobertos= 98.8% | novos=   16 | loop=4876.6s | ETA=607s
+  iter= 30600 | |SB|=30,600 | cobertos= 98.9% | novos=   15 | loop=4877.8s | ETA=628s
+  iter= 30700 | |SB|=30,700 | cobertos= 98.9% | novos=   15 | loop=4879.1s | ETA=611s
+  iter= 30800 | |SB|=30,800 | cobertos= 98.9% | novos=   15 | loop=4880.4s | ETA=593s
+  iter= 30900 | |SB|=30,900 | cobertos= 98.9% | novos=   15 | loop=4881.5s | ETA=575s
+  iter= 31000 | |SB|=31,000 | cobertos= 99.0% | novos=   14 | loop=4882.7s | ETA=598s
+  iter= 31100 | |SB|=31,100 | cobertos= 99.0% | novos=   14 | loop=4883.9s | ETA=580s
+  iter= 31200 | |SB|=31,200 | cobertos= 99.0% | novos=   14 | loop=4885.2s | ETA=563s
+  iter= 31300 | |SB|=31,300 | cobertos= 99.1% | novos=   14 | loop=4886.3s | ETA=546s
+  iter= 31400 | |SB|=31,400 | cobertos= 99.1% | novos=   14 | loop=4887.5s | ETA=528s
+  iter= 31500 | |SB|=31,500 | cobertos= 99.1% | novos=   13 | loop=4888.6s | ETA=552s
+  iter= 31600 | |SB|=31,600 | cobertos= 99.1% | novos=   13 | loop=4889.9s | ETA=535s
+  iter= 31700 | |SB|=31,700 | cobertos= 99.2% | novos=   13 | loop=4891.0s | ETA=518s
+  iter= 31800 | |SB|=31,800 | cobertos= 99.2% | novos=   13 | loop=4892.1s | ETA=501s
+  iter= 31900 | |SB|=31,900 | cobertos= 99.2% | novos=   12 | loop=4893.1s | ETA=526s
+  iter= 32000 | |SB|=32,000 | cobertos= 99.2% | novos=   12 | loop=4894.2s | ETA=509s
+  iter= 32100 | |SB|=32,100 | cobertos= 99.3% | novos=   12 | loop=4895.3s | ETA=492s
+  iter= 32200 | |SB|=32,200 | cobertos= 99.3% | novos=   12 | loop=4896.7s | ETA=475s
+  iter= 32300 | |SB|=32,300 | cobertos= 99.3% | novos=   11 | loop=4898.0s | ETA=501s
+  iter= 32400 | |SB|=32,400 | cobertos= 99.3% | novos=   11 | loop=4898.9s | ETA=485s
+  iter= 32500 | |SB|=32,500 | cobertos= 99.3% | novos=   11 | loop=4899.9s | ETA=468s
+  iter= 32600 | |SB|=32,600 | cobertos= 99.4% | novos=   11 | loop=4900.9s | ETA=452s
+  iter= 32700 | |SB|=32,700 | cobertos= 99.4% | novos=   11 | loop=4902.0s | ETA=436s
+  iter= 32800 | |SB|=32,800 | cobertos= 99.4% | novos=   10 | loop=4903.0s | ETA=462s
+  iter= 32900 | |SB|=32,900 | cobertos= 99.4% | novos=   10 | loop=4904.0s | ETA=446s
+  iter= 33000 | |SB|=33,000 | cobertos= 99.4% | novos=   10 | loop=4904.9s | ETA=430s
+  iter= 33100 | |SB|=33,100 | cobertos= 99.5% | novos=   10 | loop=4905.9s | ETA=414s
+  iter= 33200 | |SB|=33,200 | cobertos= 99.5% | novos=   10 | loop=4906.9s | ETA=398s
+  iter= 33300 | |SB|=33,300 | cobertos= 99.5% | novos=    9 | loop=4907.8s | ETA=426s
+  iter= 33400 | |SB|=33,400 | cobertos= 99.5% | novos=    9 | loop=4908.6s | ETA=410s
+  iter= 33500 | |SB|=33,500 | cobertos= 99.5% | novos=    9 | loop=4909.5s | ETA=394s
+  iter= 33600 | |SB|=33,600 | cobertos= 99.6% | novos=    9 | loop=4910.3s | ETA=378s
+  iter= 33700 | |SB|=33,700 | cobertos= 99.6% | novos=    9 | loop=4911.2s | ETA=363s
+  iter= 33800 | |SB|=33,800 | cobertos= 99.6% | novos=    8 | loop=4912.0s | ETA=391s
+  iter= 33900 | |SB|=33,900 | cobertos= 99.6% | novos=    8 | loop=4912.9s | ETA=376s
+  iter= 34000 | |SB|=34,000 | cobertos= 99.6% | novos=    8 | loop=4913.7s | ETA=360s
+  iter= 34100 | |SB|=34,100 | cobertos= 99.6% | novos=    8 | loop=4914.6s | ETA=345s
+  iter= 34200 | |SB|=34,200 | cobertos= 99.6% | novos=    8 | loop=4915.5s | ETA=329s
+  iter= 34300 | |SB|=34,300 | cobertos= 99.7% | novos=    8 | loop=4916.3s | ETA=314s
+  iter= 34400 | |SB|=34,400 | cobertos= 99.7% | novos=    7 | loop=4917.4s | ETA=343s
+  iter= 34500 | |SB|=34,500 | cobertos= 99.7% | novos=    7 | loop=4918.2s | ETA=328s
+  iter= 34600 | |SB|=34,600 | cobertos= 99.7% | novos=    7 | loop=4919.0s | ETA=312s
+  iter= 34700 | |SB|=34,700 | cobertos= 99.7% | novos=    7 | loop=4919.9s | ETA=297s
+  iter= 34800 | |SB|=34,800 | cobertos= 99.7% | novos=    7 | loop=4920.9s | ETA=283s
+  iter= 34900 | |SB|=34,900 | cobertos= 99.7% | novos=    7 | loop=4921.7s | ETA=268s
+  iter= 35000 | |SB|=35,000 | cobertos= 99.8% | novos=    6 | loop=4922.5s | ETA=296s
+  iter= 35100 | |SB|=35,100 | cobertos= 99.8% | novos=    6 | loop=4923.4s | ETA=282s
+  iter= 35200 | |SB|=35,200 | cobertos= 99.8% | novos=    6 | loop=4924.2s | ETA=267s
+  iter= 35300 | |SB|=35,300 | cobertos= 99.8% | novos=    6 | loop=4924.9s | ETA=252s
+  iter= 35400 | |SB|=35,400 | cobertos= 99.8% | novos=    6 | loop=4925.8s | ETA=238s
+  iter= 35500 | |SB|=35,500 | cobertos= 99.8% | novos=    6 | loop=4926.6s | ETA=223s
+  iter= 35600 | |SB|=35,600 | cobertos= 99.8% | novos=    6 | loop=4927.4s | ETA=209s
+  iter= 35700 | |SB|=35,700 | cobertos= 99.8% | novos=    5 | loop=4928.0s | ETA=236s
+  iter= 35800 | |SB|=35,800 | cobertos= 99.8% | novos=    5 | loop=4928.6s | ETA=222s
+  iter= 35900 | |SB|=35,900 | cobertos= 99.9% | novos=    5 | loop=4929.2s | ETA=207s
+  iter= 36000 | |SB|=36,000 | cobertos= 99.9% | novos=    5 | loop=4930.0s | ETA=193s
+  iter= 36100 | |SB|=36,100 | cobertos= 99.9% | novos=    5 | loop=4930.6s | ETA=179s
+  iter= 36200 | |SB|=36,200 | cobertos= 99.9% | novos=    5 | loop=4931.3s | ETA=165s
+  iter= 36300 | |SB|=36,300 | cobertos= 99.9% | novos=    4 | loop=4932.1s | ETA=190s
+  iter= 36400 | |SB|=36,400 | cobertos= 99.9% | novos=    4 | loop=4932.7s | ETA=176s
+  iter= 36500 | |SB|=36,500 | cobertos= 99.9% | novos=    4 | loop=4933.3s | ETA=162s
+  iter= 36600 | |SB|=36,600 | cobertos= 99.9% | novos=    4 | loop=4933.9s | ETA=148s
+  iter= 36700 | |SB|=36,700 | cobertos= 99.9% | novos=    4 | loop=4934.4s | ETA=134s
+  iter= 36800 | |SB|=36,800 | cobertos= 99.9% | novos=    4 | loop=4935.1s | ETA=120s
+  iter= 36900 | |SB|=36,900 | cobertos= 99.9% | novos=    4 | loop=4935.6s | ETA=106s
+  iter= 37000 | |SB|=37,000 | cobertos= 99.9% | novos=    3 | loop=4936.2s | ETA=125s
+  iter= 37100 | |SB|=37,100 | cobertos=100.0% | novos=    3 | loop=4936.7s | ETA=111s
+  iter= 37200 | |SB|=37,200 | cobertos=100.0% | novos=    3 | loop=4937.2s | ETA=98s
+  iter= 37300 | |SB|=37,300 | cobertos=100.0% | novos=    3 | loop=4937.7s | ETA=84s
+  iter= 37400 | |SB|=37,400 | cobertos=100.0% | novos=    3 | loop=4938.3s | ETA=71s
+  iter= 37500 | |SB|=37,500 | cobertos=100.0% | novos=    3 | loop=4938.9s | ETA=58s
+  iter= 37600 | |SB|=37,600 | cobertos=100.0% | novos=    3 | loop=4939.4s | ETA=44s
+  iter= 37700 | |SB|=37,700 | cobertos=100.0% | novos=    2 | loop=4939.9s | ETA=50s
+  iter= 37800 | |SB|=37,800 | cobertos=100.0% | novos=    2 | loop=4940.3s | ETA=37s
+  iter= 37900 | |SB|=37,900 | cobertos=100.0% | novos=    2 | loop=4940.8s | ETA=24s
+  iter= 38000 | |SB|=38,000 | cobertos=100.0% | novos=    2 | loop=4941.2s | ETA=11s
+  iter= 38100 | |SB|=38,100 | cobertos=100.0% | novos=    1 | loop=4941.6s | ETA=0s
+
+[Greedy] Concluido em 4955.2s
+  |SB|          = 38,100
+  Nao cobertos  = 0
+  Cobertura     = 100.0000%
+
+--- Verificacao de corretude ---
+  Verificacao por amostragem (10,000 de 5,200,300): [OK]
+
+--- Resultado final ---
+  |S15|          = 3,268,760
+  |S12|          = 5,200,300
+  Lower bound LP = 11,429
+  |SB15,12|      = 38,100
+  Gap de otim.   = 3.33x
+  Tempo total    = 4988.7s
+
+  Resultado salvo em: resultados_SB15_12.npy
