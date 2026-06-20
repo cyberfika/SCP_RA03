@@ -210,3 +210,17 @@ Gerando linhas da tabela:
 [OK] Nenhuma alteracao necessaria.
   Aguardando 300s...
 
+[20:42:59] Pendentes: 2/3
+Gerando linhas da tabela:
+  p=14: OK
+  p=13: (pendente)
+  p=12: OK
+  p=11: (pendente)
+  [p=14] Padrao nao encontrado — linha nao alterada.
+  [p=13] Padrao nao encontrado — linha nao alterada.
+  [p=12] Padrao nao encontrado — linha nao alterada.
+  [p=11] Padrao nao encontrado — linha nao alterada.
+
+[OK] Nenhuma alteracao necessaria.
+  Aguardando 300s...
+

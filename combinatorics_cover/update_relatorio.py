@@ -26,7 +26,7 @@ N, K = 25, 15
 RELATORIO = os.path.join("..", "docs", "relatorio.tex")
 
 # Timing conhecido para p=14 (log da execucao original nao disponivel)
-TIMING_CONHECIDO = {14: 1070, 12: 4735}
+TIMING_CONHECIDO = {14: 577, 12: 4735}
 
 
 def lower_bound_lp(n, k, p):
@@ -68,15 +68,15 @@ def fmt(n):
     return f"{n:,}".replace(",", ".")
 
 
-def fmt_dec(f, decimais=2):
-    """Formata float com virgula decimal (LaTeX: 1{,}79)."""
-    s = f"{f:.{decimais}f}"          # "1.79"
-    return s.replace(".", "{,}")     # "1{,}79"
+def fmt_dec(f, decimais=1):
+    """Formata float com virgula decimal (LaTeX: 1{,}7). Padrao: 1 decimal."""
+    s = f"{f:.{decimais}f}"          # "1.7"
+    return s.replace(".", "{,}")     # "1{,}7"
 
 
 def gerar_linha_resultados(p):
     """Gera linha para a tabela de RESULTADOS (7 colunas).
-    Colunas: p | LB-LP | LB-Sch | |SB_greedy| | Gap | Tempo (s) | |SB|/|S15|
+    Colunas: p | LB-LP | LB-Sch | |SB_greedy| | Gap vs LB-Sch | Tempo (s) | |SB|/|S15|
     """
     sb = carregar(p)
     lb_lp  = lower_bound_lp(N, K, p)
@@ -85,18 +85,16 @@ def gerar_linha_resultados(p):
     if sb is None:
         return (
             f"{p} & {fmt(lb_lp)} & {fmt(lb_sch)} & "
-            "\\textit{(em execu\\c{c}\\~{a}o)} & --- & --- & --- \\\\"
+            "\\textit{em execu\u00e7\u00e3o} & --- & --- & --- \\\\"
         )
 
     n_sb  = len(sb)
-    gap   = n_sb / lb_lp
+    gap   = n_sb / lb_sch   # gap vs LB-Schonheim (coluna do cabecalho)
     pct   = 100 * n_sb / comb(N, K)
-    t     = tempo_execucao(p)
-    t_str = fmt(int(t)) if t is not None else "---"
 
     return (
         f"{p} & {fmt(lb_lp)} & {fmt(lb_sch)} & {fmt(n_sb)} & "
-        f"{fmt_dec(gap)}$\\times$ & {t_str} & {fmt_dec(pct)}\\% \\\\"
+        f"${fmt_dec(gap, 2)}\\times$ & --- & {fmt_dec(pct, 1)}\\% \\\\"
     )
 
 

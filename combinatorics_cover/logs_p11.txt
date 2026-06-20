@@ -40,3 +40,6 @@ Lower bound LP: |SB| >= 3,265
   iter=   900 | |SB|=   900 | cobertos= 25.9% | novos=1,163 | loop=4178.1s | ETA=13180s
   iter=  1000 | |SB|= 1,000 | cobertos= 28.5% | novos=1,132 | loop=4520.6s | ETA=12728s
   iter=  1100 | |SB|= 1,100 | cobertos= 31.0% | novos=1,101 | loop=4806.1s | ETA=12205s
+  iter=  1200 | |SB|= 1,200 | cobertos= 33.4% | novos=1,074 | loop=5070.3s | ETA=11672s
+  iter=  1300 | |SB|= 1,300 | cobertos= 35.8% | novos=1,044 | loop=5383.5s | ETA=11349s
+  iter=  1400 | |SB|= 1,400 | cobertos= 38.1% | novos=1,016 | loop=5715.2s | ETA=11082s
