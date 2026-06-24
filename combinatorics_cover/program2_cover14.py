@@ -32,7 +32,7 @@ def main():
     print("=" * 60)
     print(f"Programa 2 - Cobertura de {P} elementos")
     print(f"Universo U = {{1..{N}}}, candidatos S{K}, alvos S{P}")
-    print(f"Lower bound LP: |SB| >= {comb(N,P) // comb(K,P):,}")
+    print(f"Lower bound LP: |SB| >= {-(-comb(N,P) // comb(K,P)):,}")
     print("=" * 60)
 
     t_total = time.time()
@@ -56,9 +56,9 @@ def main():
     print("\n--- Resultado final ---")
     print(f"  |S{K}|          = {len(s15):,}")
     print(f"  |S{P}|          = {len(sp):,}")
-    print(f"  Lower bound LP = {comb(N,P) // comb(K,P):,}")
+    print(f"  Lower bound LP = {-(-comb(N,P) // comb(K,P)):,}")
     print(f"  |SB{K},{P}|      = {len(sb):,}")
-    print(f"  Gap de otim.   = {len(sb) / (comb(N,P) // comb(K,P)):.2f}x")
+    print(f"  Gap de otim.   = {len(sb) / (-(-comb(N,P) // comb(K,P))):.2f}x")
     print(f"  Tempo total    = {time.time()-t_total:.1f}s")
 
     # Salvar resultado

@@ -9,7 +9,7 @@ Estrategia:
   Util como baseline de comparacao com o greedy.
 
 Complexidade por tentativa:
-  Tempo:  O(|S15| + |Sp|)  — linear (sem contagem de cobertura)
+  Tempo:  O(|S15| * |Sp|)  — para cada X em S15, varre Sp nao coberto
   Espaco: O(|S15| + |Sp|)
 
 Garantia: nenhuma de otimalidade. Probabilisticamente, para cobertura
@@ -63,7 +63,7 @@ def random_set_cover(
     t0 = time.time()
 
     if verbose:
-        lb = n_sp // comb(k, p)
+        lb = -(-n_sp // comb(k, p))
         print(f"\n[Random] p={p} | {n_tentativas} tentativas | lower bound >= {lb:,}")
 
     for tentativa in range(1, n_tentativas + 1):
@@ -107,7 +107,7 @@ def random_set_cover(
         melhor_sb = sb  # retorna a ultima mesmo incompleta
 
     if verbose:
-        lb = n_sp // comb(k, p)
+        lb = -(-n_sp // comb(k, p))
         print(f"\n[Random] Melhor |SB| = {len(melhor_sb):,}")
         print(f"         Lower bound  = {lb:,}")
         print(f"         Gap          = {len(melhor_sb)/lb:.2f}x")
@@ -136,7 +136,7 @@ def main():
     print()
     verificar_cobertura(sb, s_alvo, verbose=True)
 
-    lb = comb(N_TESTE, P_TESTE) // comb(K_TESTE, P_TESTE)
+    lb = -(-comb(N_TESTE, P_TESTE) // comb(K_TESTE, P_TESTE))
     print(f"  Lower bound LP: |SB| >= {lb}")
     print(f"  Solucao random: |SB|  = {len(sb)}")
 

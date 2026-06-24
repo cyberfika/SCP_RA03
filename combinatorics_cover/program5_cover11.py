@@ -6,7 +6,7 @@ esteja contida em pelo menos um elemento de SB15,11.
 
   Para todo Y em S11, existe X em SB15,11 tal que Y <= X
 
-Lower bound LP: |SB| >= C(25,11) / C(15,11) = 4.457.400 / 1365 = 3.265
+Lower bound LP: |SB| >= ceil(C(25,11) / C(15,11)) = ceil(4.457.400 / 1.365) = 3.266
 """
 
 import sys
@@ -32,7 +32,7 @@ def main():
     print("=" * 60)
     print(f"Programa 5 - Cobertura de {P} elementos")
     print(f"Universo U = {{1..{N}}}, candidatos S{K}, alvos S{P}")
-    print(f"Lower bound LP: |SB| >= {comb(N,P) // comb(K,P):,}")
+    print(f"Lower bound LP: |SB| >= {-(-comb(N,P) // comb(K,P)):,}")
     print("=" * 60)
 
     t_total = time.time()
@@ -56,9 +56,9 @@ def main():
     print("\n--- Resultado final ---")
     print(f"  |S{K}|          = {len(s15):,}")
     print(f"  |S{P}|          = {len(sp):,}")
-    print(f"  Lower bound LP = {comb(N,P) // comb(K,P):,}")
+    print(f"  Lower bound LP = {-(-comb(N,P) // comb(K,P)):,}")
     print(f"  |SB{K},{P}|      = {len(sb):,}")
-    print(f"  Gap de otim.   = {len(sb) / (comb(N,P) // comb(K,P)):.2f}x")
+    print(f"  Gap de otim.   = {len(sb) / (-(-comb(N,P) // comb(K,P))):.2f}x")
     print(f"  Tempo total    = {time.time()-t_total:.1f}s")
 
     os.makedirs(RESULTS_DIR, exist_ok=True)
