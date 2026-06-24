@@ -1,0 +1,17 @@
+[
+  {
+    "method": "Greedy baseline",
+    "category_pt": "Algoritmo guloso",
+    "preset": "small",
+    "n": 12,
+    "k": 7,
+    "p": 4,
+    "elapsed_seconds": 0.07543460000124469,
+    "selected_count": 27,
+    "lower_bound_lp": 15,
+    "gap_vs_lb": 1.8,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "Baseline guloso determinístico com escolha de maior ganho marginal."
+  }
+]

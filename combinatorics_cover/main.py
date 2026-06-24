@@ -18,6 +18,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
 
 SCRIPT_DIR  = os.path.dirname(os.path.abspath(__file__))
 RESULTS_DIR = os.path.join(SCRIPT_DIR, "..", "results", "greedy")
+EXPERIMENT_RESULTS_DIR = os.path.join(SCRIPT_DIR, "..", "results", "experiments")
 LOGS_DIR    = os.path.join(SCRIPT_DIR, "..", "logs")
 
 N, K = 25, 15
@@ -56,6 +57,27 @@ def linha_status(p, st):
         return f"  p={p}  [pendente      ]  LB={lb:,}"
 
 
+def status_experimentos():
+    """Retorna status dos benchmarks experimentais usados na apresentacao."""
+    expected_files = {
+        "small": "benchmark_small_all.md",
+        "medium": "benchmark_medium_all.md",
+        "large-demo": "benchmark_large-demo_all.md",
+    }
+    status = {}
+    for preset, filename in expected_files.items():
+        path = os.path.join(EXPERIMENT_RESULTS_DIR, filename)
+        status[preset] = (os.path.exists(path), path)
+    return status
+
+
+def linha_status_experimento(preset, st):
+    """Formata uma linha de status para um preset experimental."""
+    exists, path = st[preset]
+    marker = "OK" if exists else "pendente"
+    return f"  {preset:<10} [{marker:<8}]  {os.path.relpath(path, SCRIPT_DIR)}"
+
+
 def executar(script, args=None, log_path=None):
     """
     Executa script Python com saida em tempo real.
@@ -87,6 +109,11 @@ def executar(script, args=None, log_path=None):
             f_log.close()
     proc.wait()
     return proc.returncode
+
+
+def executar_script_path(script_path, args=None, log_path=None):
+    """Executa um script Python por caminho relativo ao projeto combinatorics_cover."""
+    return executar(script_path, args=args, log_path=log_path)
 
 
 def perguntar_log(nome_log):
@@ -141,6 +168,34 @@ def rodar_todos():
     pausar()
 
 
+def rodar_todos_programas_e_experimentos():
+    print("\nRodara Programas 1, 1 paralelo, 2, 3, 4, 5 e benchmarks experimentais.")
+    print("Tempo estimado: programas reais podem levar varias horas.")
+    print("Benchmarks: small, medium e large-demo (large-demo sem Lagrangiana/Column Generation).")
+    r = input("Confirma execucao completa? [s/N] ").strip().lower()
+    if r != "s":
+        return
+
+    print("\n[Etapa 1/3] Geracao sequencial e paralela")
+    executar("program1_generation.py")
+    executar("program1_generation_parallel.py")
+
+    print("\n[Etapa 2/3] Programas 2-5")
+    salvar = input("Salvar logs dos Programas 2-5? [s/N] ").strip().lower() == "s"
+    for script, log_name in [
+        ("program2_cover14.py", "logs_p14.txt"),
+        ("program3_cover13.py", "logs_p13.txt"),
+        ("program4_cover12.py", "logs_p12.txt"),
+        ("program5_cover11.py", "logs_p11.txt"),
+    ]:
+        log = os.path.join(LOGS_DIR, log_name) if salvar else None
+        executar(script, log_path=log)
+
+    print("\n[Etapa 3/3] Benchmarks experimentais")
+    rodar_todos_experimentos(pausar_ao_final=False, confirmar=False)
+    pausar()
+
+
 def rodar_inspecao():
     args_extra = input("\nDigite p para detalhes (ex: 14) ou ENTER para resumo: ").strip()
     verify = ""
@@ -184,6 +239,72 @@ def rodar_update_relatorio():
     pausar()
 
 
+def rodar_experimento(preset, solver="all", skip_advanced=False):
+    """Executa benchmark experimental e exporta CSV/JSON/Markdown."""
+    args = ["--preset", preset, "--solver", solver]
+    if skip_advanced:
+        args.append("--skip-advanced-on-large")
+    return executar_script_path(os.path.join("experiments", "benchmark.py"), args=args)
+
+
+def rodar_todos_experimentos(pausar_ao_final=True, confirmar=True):
+    print("\nBenchmarks experimentais disponiveis:")
+    print("  small      : todos os metodos, rapido")
+    print("  medium     : todos os metodos, ~2 min")
+    print("  large-demo : metodos construtivos; pula Lagrangiana/Column Generation")
+    if confirmar:
+        r = input("Rodar todos os benchmarks experimentais? [s/N] ").strip().lower()
+        if r != "s":
+            return
+    rodar_experimento("small")
+    rodar_experimento("medium")
+    rodar_experimento("large-demo", skip_advanced=True)
+    if pausar_ao_final:
+        pausar()
+
+
+def menu_experimentos():
+    while True:
+        limpar()
+        st_exp = status_experimentos()
+        print("=" * 58)
+        print("  SCP_RA03 — Experimentos Algoritmicos")
+        print("=" * 58)
+        print("\n  Status dos artefatos:")
+        for preset in ["small", "medium", "large-demo"]:
+            print(linha_status_experimento(preset, st_exp))
+        print("\n  1. Benchmark small — todos os metodos")
+        print("  2. Benchmark medium — todos os metodos")
+        print("  3. Benchmark large-demo — metodos construtivos")
+        print("  4. Benchmark customizado")
+        print("  5. Rodar todos os benchmarks experimentais")
+        print("  0. Voltar")
+        print("=" * 58)
+
+        opcao = input("\n  Opcao: ").strip()
+        if opcao == "0":
+            break
+        elif opcao == "1":
+            rodar_experimento("small")
+            pausar()
+        elif opcao == "2":
+            rodar_experimento("medium")
+            pausar()
+        elif opcao == "3":
+            rodar_experimento("large-demo", skip_advanced=True)
+            pausar()
+        elif opcao == "4":
+            preset = input("Preset (small/medium/large-demo): ").strip()
+            solver = input("Solver (all/greedy/stochastic/grasp/local-search/lagrangian/column-generation): ").strip()
+            skip = input("Pular metodos avancados se large-demo? [S/n] ").strip().lower() != "n"
+            rodar_experimento(preset, solver or "all", skip_advanced=skip)
+            pausar()
+        elif opcao == "5":
+            rodar_todos_experimentos()
+        else:
+            input("  Opcao invalida. ENTER para tentar novamente...")
+
+
 # ---------------------------------------------------------------------------
 # Menu principal
 # ---------------------------------------------------------------------------
@@ -199,6 +320,10 @@ def menu():
         print("\n  Status dos resultados:")
         for p in [14, 13, 12, 11]:
             print(linha_status(p, st))
+        print("\n  Status dos experimentos:")
+        st_exp = status_experimentos()
+        for preset in ["small", "medium", "large-demo"]:
+            print(linha_status_experimento(preset, st_exp))
 
         print("\n  --- Geracao ---")
         print("  1. Programa 1 — Gerar e validar S15..S11 (sequencial)")
@@ -210,9 +335,11 @@ def menu():
         print("  4. Programa 4 — SB{15,12}  (~79 min)")
         print("  5. Programa 5 — SB{15,11}  (~3.4 h)")
         print("  6. Todos os programas 2-5 em sequencia")
+        print(" 6b. Todos os programas e experimentos")
 
         print("\n  --- Interface Visual ---")
         print("  7. Monitor TUI (demo / escala real)")
+        print(" 7b. Menu de experimentos")
 
         print("\n  --- Utilitarios ---")
         print("  8. Inspecionar resultados (.npy)")
@@ -233,7 +360,9 @@ def menu():
         elif opcao == "4":  rodar_programa(4)
         elif opcao == "5":  rodar_programa(5)
         elif opcao == "6":  rodar_todos()
+        elif opcao == "6b": rodar_todos_programas_e_experimentos()
         elif opcao == "7":  rodar_tui()
+        elif opcao == "7b": menu_experimentos()
         elif opcao == "8":  rodar_inspecao()
         elif opcao == "9":  rodar_auditoria()
         elif opcao == "10": rodar_analysis()

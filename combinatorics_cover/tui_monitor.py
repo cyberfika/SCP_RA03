@@ -12,8 +12,10 @@ Suporta:
 import sys
 import os
 import time
+import subprocess
 
 RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "tui")
+EXPERIMENT_RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "experiments")
 import queue
 from itertools import combinations
 from math import comb
@@ -397,6 +399,81 @@ def executar_dashboard(is_demo, usar_tui=True):
 
 
 # ---------------------------------------------------------------------------
+# Benchmarks experimentais
+# ---------------------------------------------------------------------------
+
+def executar_benchmark_experimental(preset, solver="all", skip_advanced=False):
+    """
+    Executa um benchmark da pasta experiments e mostra a saida em tempo real.
+
+    Os experimentos geram CSV, JSON e Markdown em results/experiments. Eles nao
+    substituem os resolvedores reais; servem para demonstrar as alternativas do
+    enunciado em instancias reduzidas e reprodutiveis.
+    """
+    script = os.path.join(os.path.dirname(os.path.abspath(__file__)), "experiments", "benchmark.py")
+    cmd = [sys.executable, script, "--preset", preset, "--solver", solver]
+    if skip_advanced:
+        cmd.append("--skip-advanced-on-large")
+
+    print(f"\n{C_BOLD}{C_CYAN}Executando benchmark experimental:{C_RESET} preset={preset}, solver={solver}")
+    proc = subprocess.Popen(
+        cmd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+    )
+    for line in proc.stdout:
+        print(line, end="")
+    proc.wait()
+    print(f"\nCodigo de saida: {proc.returncode}")
+    print(f"Artefatos: {os.path.abspath(EXPERIMENT_RESULTS_DIR)}")
+    return proc.returncode
+
+
+def menu_experimentos():
+    """Menu textual para benchmarks das abordagens alternativas."""
+    while True:
+        os.system('cls' if os.name == 'nt' else 'clear')
+        print(f"{C_BOLD}{C_BLUE}======================================================================{C_RESET}")
+        print(f"{C_BOLD}{C_CYAN}              EXPERIMENTOS ALGORITMICOS - RA03                         {C_RESET}")
+        print(f"{C_BOLD}{C_BLUE}======================================================================{C_RESET}")
+        print("  Os experimentos comparam abordagens do enunciado em instancias reduzidas.")
+        print("  Saidas: CSV, JSON e Markdown em results/experiments.")
+        print(f"\n  {C_BOLD}1. Rodar small - todos os metodos{C_RESET}")
+        print("     Inclui Greedy, Stochastic Greedy, GRASP, busca local, Lagrangiana e Column Generation.")
+        print(f"\n  {C_BOLD}2. Rodar medium - todos os metodos (~2 min){C_RESET}")
+        print("     Instancia maior para tabela comparativa da apresentacao.")
+        print(f"\n  {C_BOLD}3. Rodar large-demo - metodos construtivos{C_RESET}")
+        print("     Pula Lagrangiana e Column Generation para evitar custo alto.")
+        print(f"\n  {C_BOLD}4. Rodar todos os benchmarks recomendados{C_RESET}")
+        print(f"\n  {C_BOLD}5. Voltar{C_RESET}")
+        print(f"\n{C_BOLD}{C_BLUE}======================================================================{C_RESET}")
+
+        opcao = input("  Opcao desejada (1-5): ").strip()
+        if opcao == "1":
+            executar_benchmark_experimental("small")
+            input("\nPressione ENTER para voltar...")
+        elif opcao == "2":
+            executar_benchmark_experimental("medium")
+            input("\nPressione ENTER para voltar...")
+        elif opcao == "3":
+            executar_benchmark_experimental("large-demo", skip_advanced=True)
+            input("\nPressione ENTER para voltar...")
+        elif opcao == "4":
+            executar_benchmark_experimental("small")
+            executar_benchmark_experimental("medium")
+            executar_benchmark_experimental("large-demo", skip_advanced=True)
+            input("\nPressione ENTER para voltar...")
+        elif opcao == "5":
+            break
+        else:
+            print("\n  Opcao invalida! Pressione Enter para tentar novamente...")
+            input()
+
+
+# ---------------------------------------------------------------------------
 # Menu Inicial
 # ---------------------------------------------------------------------------
 
@@ -415,10 +492,12 @@ def main():
         print("     Executa o problema completo de forma gráfica (N=25, candidatos K=15).")
         print(f"\n  {C_BOLD}4. Modo LOG (Texto) — Escala Real (Demorado){C_RESET}")
         print("     Executa o problema completo em formato texto puro, listando progresso a cada 20%.")
-        print(f"\n  {C_BOLD}5. SAIR{C_RESET}")
+        print(f"\n  {C_BOLD}5. Experimentos algoritmicos{C_RESET}")
+        print("     Roda benchmarks de Greedy, Stochastic Greedy, GRASP, Lagrangiana e Column Generation.")
+        print(f"\n  {C_BOLD}6. SAIR{C_RESET}")
         print(f"\n{C_BOLD}{C_BLUE}======================================================================{C_RESET}")
         
-        opcao = input("  Opção desejada (1-5): ").strip()
+        opcao = input("  Opção desejada (1-6): ").strip()
         
         if opcao == '1':
             executar_dashboard(is_demo=True, usar_tui=True)
@@ -433,6 +512,8 @@ def main():
             if confirmacao == 's':
                 executar_dashboard(is_demo=False, usar_tui=False)
         elif opcao == '5':
+            menu_experimentos()
+        elif opcao == '6':
             print("\n  Saindo. Até logo!")
             break
         else:
