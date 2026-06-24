@@ -670,7 +670,57 @@ $p$ & Tempo observado & Limitante dominante & Melhoria possível \\
         \texttt{multiprocessing}, reduzindo o tempo proporcional ao número de núcleos.
 \end{itemize}
 
-% ---------------------------------------------------------------------------
+\paragraph{Análise de viabilidade do paralelismo por programa.}
+O paralelismo foi implementado somente no Programa~5 ($p=11$) e no Programa~1.
+Para os Programas~2, 3 e~4, o custo de comunicação interprocessos (IPC) supera
+o benefício, tornando a paralelização contraproducente. A análise por programa
+segue abaixo.
+
+\textbf{Programa~1 (geração dos conjuntos).}
+A geração de $\mathcal{S}_{15}, \mathcal{S}_{14}, \ldots, \mathcal{S}_{11}$ é
+\emph{trivialmente paralelizável}: cada conjunto é inteiramente independente dos
+demais. Um \texttt{Pool} com 5 workers gera os 5 arrays simultaneamente,
+reduzindo o tempo total de $\approx 4$s para $\approx 1$s (speedup real próximo
+de $4\times$ com 4 núcleos físicos).
+
+\textbf{Programas~2 ($p=14$), 3 ($p=13$) e~4 ($p=12$).}
+Nestes três casos, a paralelização do laço interno de atualização de
+\texttt{count[]} é inviável porque o volume de trabalho paralelizável por
+iteração é pequeno demais para amortizar o \emph{overhead} fixo de IPC
+($\approx 1{-}5$ ms por chamada a \texttt{pool.map}):
+
+\begin{itemize}
+  \item \textbf{$p=14$}: cada $X$ selecionado cobre $\C{15}{14}=15$ novos $Y$'s;
+        cada $Y$ tem $\C{11}{1}=11$ extensões possíveis em $\mathcal{S}_{15}$
+        $\Rightarrow$ apenas $15 \times 11 = 165$ índices por iteração.
+        Com 4 workers, cada worker receberia $\approx 4$ $Y$'s e retornaria
+        $\approx 44$ índices --- troca de dados trivial, dominada pelo custo de
+        serialização e agendamento do pool.
+
+  \item \textbf{$p=13$}: $\C{15}{13}=105$ novos $Y$'s e $\C{12}{2}=66$
+        extensões cada $\Rightarrow$ $6.930$ índices/iter. Ainda insuficiente:
+        transferir $\approx 1.730$ pares \texttt{(j, y\_mask)} para cada worker
+        e receber $\approx 1.700$ índices de retorno gera IPC superior ao tempo
+        de cálculo das extensões em Python puro.
+
+  \item \textbf{$p=12$}: $\C{15}{12}=455$ novos $Y$'s e $\C{13}{3}=286$
+        extensões cada $\Rightarrow$ $130.130$ índices/iter. Este caso é
+        limítrofe; porém, o Programa~4 já utiliza \texttt{np.argmax} vetorizado
+        e completa em $\approx 79$ min, enquanto o overhead de criação do pool
+        e serialização dos arrays adicionaria latência sem ganho líquido,
+        dado que o número de iterações é pequeno ($|\SB_{15,12}| \approx 38.100$).
+\end{itemize}
+
+\textbf{Programa~5 ($p=11$).}
+Com $\C{15}{11}=1.365$ novos $Y$'s por iteração e $\C{14}{4}=1.001$ extensões
+por $Y$, o trabalho paralelizável atinge $\approx 1.366.365$ operações/iter ---
+três ordens de grandeza acima do caso $p=14$. O pool é criado \emph{uma única vez}
+antes do laço greedy e reutilizado em todas as $12.733$ iterações, eliminando
+o custo de inicialização recorrente. O speedup prático esperado é $\approx 3\times$
+(de $\approx 3{,}4$h para $\approx 1{,}1$h em 4 núcleos).
+
+
+% ---------------------------------------------------------------------------
 \section{Comparação entre Estratégias}
 % ---------------------------------------------------------------------------
 
