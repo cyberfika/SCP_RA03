@@ -6,7 +6,7 @@
     "n": 12,
     "k": 7,
     "p": 4,
-    "elapsed_seconds": 0.07543460000124469,
+    "elapsed_seconds": 0.06458240000029036,
     "selected_count": 27,
     "lower_bound_lp": 15,
     "gap_vs_lb": 1.8,

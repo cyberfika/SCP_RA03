@@ -1,2 +1,2 @@
 method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
-Greedy baseline,Algoritmo guloso,small,12,7,4,0.07543460000124469,27,15,1.8,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.
+Greedy baseline,Algoritmo guloso,small,12,7,4,0.06458240000029036,27,15,1.8,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.

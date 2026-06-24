@@ -98,13 +98,17 @@ def tabela_lower_bounds():
 def tabela_complexidade():
     print("\n--- Complexidade do Greedy por iteracao ---\n")
     print(f"{'p':>4} | {'C(k,p)':>8} | {'C(n-p,k-p)':>12} | "
-          f"{'updates/iter':>14} | {'estrategia':>12}")
+          f"{'updates/iter':>14} | {'estrategia':>18}")
     print("-" * 65)
     for p in [14, 13, 12, 11]:
         c = complexidade_greedy(N, K, p)
-        estrategia = "heap lazy" if c["updates_iter"] <= 10_000 else "numpy argmax"
+        if p == 11:
+            # O Programa 5 usa paralelismo para dividir a etapa mais cara de atualizacao.
+            estrategia = "parallel update"
+        else:
+            estrategia = "heap lazy" if c["updates_iter"] <= 10_000 else "numpy argmax"
         print(f"  {p:>2} | {c['cob_x']:>8,} | {c['ext_y']:>12,} | "
-              f"{c['updates_iter']:>14,} | {estrategia:>12}")
+              f"{c['updates_iter']:>14,} | {estrategia:>18}")
 
 
 def tabela_resultados():
@@ -166,8 +170,8 @@ def tabela_complexidade_assintotica():
     print("  p=14: viavel em ~10 min  (heap eficiente, poucos updates/iter)")
     print("  p=13: viavel em ~30 min")
     print("  p=12: moderado, ~3 horas")
-    print("  p=11: lento, ~4 horas (bottleneck: Python puro, 1.37M loops/iter)")
-    print("  Melhoria possivel: implementar em C/Cython ou usar index invertido em RAM")
+    print("  p=11: mitigado com paralelismo no Programa 5 (1.37M updates/iter)")
+    print("  Melhoria possivel: C/Cython, bitsets vetorizados ou particionamento distribuido")
 
 
 # ---------------------------------------------------------------------------
