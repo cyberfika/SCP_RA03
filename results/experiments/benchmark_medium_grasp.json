@@ -1,0 +1,17 @@
+[
+  {
+    "method": "GRASP",
+    "category_pt": "Metaheurística",
+    "preset": "medium",
+    "n": 15,
+    "k": 9,
+    "p": 6,
+    "elapsed_seconds": 215.09339189999992,
+    "selected_count": 142,
+    "lower_bound_lp": 60,
+    "gap_vs_lb": 2.3666666666666667,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "20 construções; RCL=10; poda local=sim; seed=123."
+  }
+]

@@ -1,0 +1,2 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+GRASP,Metaheurística,medium,15,9,6,215.09339189999992,142,60,2.3666666666666667,100.0,True,20 construções; RCL=10; poda local=sim; seed=123.

@@ -1,0 +1,2 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+Greedy baseline,Algoritmo guloso,medium,15,9,6,11.441950200000065,140,60,2.3333333333333335,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.

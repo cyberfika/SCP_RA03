@@ -1,0 +1,17 @@
+[
+  {
+    "method": "Relaxação Lagrangiana",
+    "category_pt": "Relaxação / lower bound",
+    "preset": "medium",
+    "n": 15,
+    "k": 9,
+    "p": 6,
+    "elapsed_seconds": 30.992296800000986,
+    "selected_count": 140,
+    "lower_bound_lp": 60,
+    "gap_vs_lb": 2.3333333333333335,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "Relaxação Lagrangiana demonstrativa; 40 iterações; melhor bound lagrangiano=59.58; solução reparada por greedy."
+  }
+]

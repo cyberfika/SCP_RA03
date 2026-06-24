@@ -1,0 +1,7 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+Greedy baseline,Algoritmo guloso,medium,15,9,6,10.0349640000004,140,60,2.3333333333333335,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.
+Stochastic Greedy,Probabilístico / randômico,medium,15,9,6,0.7434269000004861,152,60,2.533333333333333,100.0,True,Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos.
+GRASP,Metaheurística,medium,15,9,6,48.81316379999953,143,60,2.3833333333333333,100.0,True,5 construções; RCL=10; poda local=sim; seed=123.
+Greedy + poda local,Busca local pós-greedy,medium,15,9,6,10.754530299998805,140,60,2.3333333333333335,100.0,True,Removeu 0 candidatos redundantes mantendo cobertura exata.
+Relaxação Lagrangiana,Relaxação / lower bound,medium,15,9,6,23.947657000000618,140,60,2.3333333333333335,100.0,True,Relaxação Lagrangiana demonstrativa; 40 iterações; melhor bound lagrangiano=59.58; solução reparada por greedy.
+Column Generation,Programação linear / pricing,medium,15,9,6,18.55084419999912,171,60,2.85,100.0,True,Column Generation relaxado; 25 rodadas de pricing; valor LP=111.19; solução arredondada e reparada.

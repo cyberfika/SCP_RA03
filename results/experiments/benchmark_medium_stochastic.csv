@@ -1,0 +1,2 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+Stochastic Greedy,Probabilístico / randômico,medium,15,9,6,0.7353789999997389,152,60,2.533333333333333,100.0,True,Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos.

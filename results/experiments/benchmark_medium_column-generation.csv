@@ -1,0 +1,2 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+Column Generation,Programação linear / pricing,medium,15,9,6,16.58876659999987,171,60,2.85,100.0,True,Column Generation relaxado; 25 rodadas de pricing; valor LP=111.19; solução arredondada e reparada.
