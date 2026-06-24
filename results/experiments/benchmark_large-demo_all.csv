@@ -1,0 +1,5 @@
+method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
+Greedy baseline,Algoritmo guloso,large-demo,16,10,6,24.89535419999993,105,39,2.6923076923076925,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.
+Stochastic Greedy,Probabilístico / randômico,large-demo,16,10,6,1.2084019000012631,115,39,2.948717948717949,100.0,True,Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos.
+GRASP,Metaheurística,large-demo,16,10,6,143.86158559999967,107,39,2.7435897435897436,100.0,True,5 construções; RCL=10; poda local=sim; seed=123.
+Greedy + poda local,Busca local pós-greedy,large-demo,16,10,6,28.267781399999876,105,39,2.6923076923076925,100.0,True,Removeu 0 candidatos redundantes mantendo cobertura exata.

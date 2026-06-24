@@ -1,0 +1,62 @@
+[
+  {
+    "method": "Greedy baseline",
+    "category_pt": "Algoritmo guloso",
+    "preset": "large-demo",
+    "n": 16,
+    "k": 10,
+    "p": 6,
+    "elapsed_seconds": 24.89535419999993,
+    "selected_count": 105,
+    "lower_bound_lp": 39,
+    "gap_vs_lb": 2.6923076923076925,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "Baseline guloso determinístico com escolha de maior ganho marginal."
+  },
+  {
+    "method": "Stochastic Greedy",
+    "category_pt": "Probabilístico / randômico",
+    "preset": "large-demo",
+    "n": 16,
+    "k": 10,
+    "p": 6,
+    "elapsed_seconds": 1.2084019000012631,
+    "selected_count": 115,
+    "lower_bound_lp": 39,
+    "gap_vs_lb": 2.948717948717949,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos."
+  },
+  {
+    "method": "GRASP",
+    "category_pt": "Metaheurística",
+    "preset": "large-demo",
+    "n": 16,
+    "k": 10,
+    "p": 6,
+    "elapsed_seconds": 143.86158559999967,
+    "selected_count": 107,
+    "lower_bound_lp": 39,
+    "gap_vs_lb": 2.7435897435897436,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "5 construções; RCL=10; poda local=sim; seed=123."
+  },
+  {
+    "method": "Greedy + poda local",
+    "category_pt": "Busca local pós-greedy",
+    "preset": "large-demo",
+    "n": 16,
+    "k": 10,
+    "p": 6,
+    "elapsed_seconds": 28.267781399999876,
+    "selected_count": 105,
+    "lower_bound_lp": 39,
+    "gap_vs_lb": 2.6923076923076925,
+    "coverage_percent": 100.0,
+    "is_exactly_covered": true,
+    "notes_pt": "Removeu 0 candidatos redundantes mantendo cobertura exata."
+  }
+]
