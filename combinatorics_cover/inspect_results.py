@@ -22,10 +22,12 @@ from solver_greedy import verificar_cobertura
 
 N, K = 25, 15
 
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "greedy")
+
 
 def carregar(p: int) -> np.ndarray | None:
     """Carrega resultados_SB15_<p>.npy se existir."""
-    arq = f"resultados_SB{K}_{p}.npy"
+    arq = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{p}.npy")
     if not os.path.exists(arq):
         return None
     return np.load(arq)
@@ -44,7 +46,7 @@ def inspecionar(p: int, verificar: bool = False):
     print(f"\n{'='*60}")
     print(f"  SB{{15,{p}}} — Cobertura de combinacoes de {p} elementos")
     print(f"{'='*60}")
-    print(f"  Arquivo        : resultados_SB{K}_{p}.npy")
+    print(f"  Arquivo        : {os.path.join(RESULTS_DIR, f'resultados_SB{K}_{p}.npy')}")
     print(f"  |SB|           : {len(sb):,}")
     print(f"  Lower bound LP : {lb_lp:,}  [ ceil(C(25,{p})/C(15,{p})) ]")
     print(f"  Gap greedy/LB  : {gap:.3f}x")
@@ -80,7 +82,7 @@ def resumo_geral():
     for p in [14, 13, 12, 11]:
         sb = carregar(p)
         lb = -(-comb(N, p) // comb(K, p))
-        arq = f"resultados_SB{K}_{p}.npy"
+        arq = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{p}.npy")
         if sb is None:
             print(f"  {p:>3} | {arq:>24} | {'(pendente)':>10} | {lb:>10,} |    —")
         else:

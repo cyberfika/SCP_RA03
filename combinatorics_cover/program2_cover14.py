@@ -13,6 +13,8 @@ import sys
 import time
 from math import comb
 
+import os
+
 import numpy as np
 
 sys.path.insert(0, ".")
@@ -22,6 +24,8 @@ from solver_greedy import greedy_set_cover, verificar_cobertura
 N = 25
 K = 15
 P = 14
+
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "greedy")
 
 
 def main():
@@ -58,7 +62,8 @@ def main():
     print(f"  Tempo total    = {time.time()-t_total:.1f}s")
 
     # Salvar resultado
-    saida = f"resultados_SB{K}_{P}.npy"
+    os.makedirs(RESULTS_DIR, exist_ok=True)
+    saida = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{P}.npy")
     np.save(saida, sb)
     print(f"\n  Resultado salvo em: {saida}")
 

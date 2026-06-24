@@ -12,6 +12,8 @@ Suporta:
 import sys
 import os
 import time
+
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "tui")
 import queue
 from itertools import combinations
 from math import comb
@@ -187,7 +189,8 @@ def resolver_task(p, n, k, is_demo, q):
                 
         # Concluído
         tempo_final = time.time() - t0
-        fn = f"tui_resultado_SB{k}_{p}.npy"
+        os.makedirs(RESULTS_DIR, exist_ok=True)
+        fn = os.path.join(RESULTS_DIR, f"tui_resultado_SB{k}_{p}.npy")
         np.save(fn, np.array(sb_masks, dtype=np.uint32))
         
         q.put({
@@ -370,7 +373,7 @@ def executar_dashboard(is_demo, usar_tui=True):
                 else:
                     print(f"\n{C_GREEN}{C_BOLD}>> CONCLUÍDO! Todos os processos finalizaram. <<{C_RESET}")
                     print(f"  Tempo total decorrido: {time.time() - total_tempo_inicio:.1f}s")
-                    print("  Os resultados foram salvos como 'tui_resultado_SB_*.npy'.")
+                    print(f"  Os resultados foram salvos em '{os.path.abspath(RESULTS_DIR)}'.")
                     print("  Pressione ENTER para voltar ao menu principal.")
                     try:
                         input()

@@ -15,6 +15,10 @@ import sys
 import os
 import re
 import time
+
+_SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+RESULTS_DIR = os.path.join(_SCRIPT_DIR, "..", "results", "greedy")
+LOGS_DIR = os.path.join(_SCRIPT_DIR, "..", "logs")
 from math import comb
 
 if sys.stdout.encoding and sys.stdout.encoding.lower() != "utf-8":
@@ -44,7 +48,7 @@ def lower_bound_schoenheim(n, k, p):
 
 
 def carregar(p):
-    arq = f"resultados_SB{K}_{p}.npy"
+    arq = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{p}.npy")
     if not os.path.exists(arq):
         return None
     return np.load(arq)
@@ -52,7 +56,7 @@ def carregar(p):
 
 def tempo_execucao(p):
     """Le o tempo de execucao do log se disponivel."""
-    log = f"logs_p{p}.txt"
+    log = os.path.join(LOGS_DIR, f"logs_p{p}.txt")
     if not os.path.exists(log):
         return TIMING_CONHECIDO.get(p)
     with open(log, "r", encoding="utf-8", errors="ignore") as f:

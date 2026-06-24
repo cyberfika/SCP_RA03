@@ -10,6 +10,8 @@ Carrega os arquivos .npy gerados pelos Programas 2-5 e exibe:
 import sys
 import os
 import time
+
+RESULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "results", "greedy")
 from math import comb, log
 
 import numpy as np
@@ -112,8 +114,8 @@ def tabela_resultados():
     print("-" * 90)
 
     for p in [14, 13, 12, 11]:
-        arq_g = f"resultados_SB{K}_{p}.npy"
-        arq_r = f"resultados_SB{K}_{p}_random.npy"
+        arq_g = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{p}.npy")
+        arq_r = os.path.join(RESULTS_DIR, f"resultados_SB{K}_{p}_random.npy")
         lb    = lower_bound_lp(N, K, p)
 
         sb_g_str = sb_r_str = gap_g = gap_r = "—"
