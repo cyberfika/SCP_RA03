@@ -53,7 +53,7 @@ def verificar_exato(sb: np.ndarray, sp: np.ndarray) -> tuple[bool, int]:
 
     for i, x in enumerate(sb):
         mask = np.uint32(x)
-        novos = ~coberto & ((sp & mask) == mask)
+        novos = ~coberto & ((sp & mask) == sp)
         n_novos = int(novos.sum())
         if n_novos:
             coberto |= novos

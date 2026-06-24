@@ -181,7 +181,7 @@ def main():
     s_grande = gerar_array(N_TESTE, K_TESTE)
     s_alvo   = gerar_array(N_TESTE, P_TESTE)
 
-    lb = comb(N_TESTE, P_TESTE) // comb(K_TESTE, P_TESTE)
+    lb = -(-comb(N_TESTE, P_TESTE) // comb(K_TESTE, P_TESTE))
     print(f"  Lower bound LP: {lb}")
     print(f"  |S{K_TESTE}| candidatos: {len(s_grande):,}")
     print(f"  |S{P_TESTE}| alvos:      {len(s_alvo):,}")

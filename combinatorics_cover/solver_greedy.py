@@ -64,7 +64,7 @@ def greedy_set_cover(
     limite_iter: int | None = None,
 ) -> np.ndarray:
     """
-    Greedy Set Cover: seleciona o menor SB <= Sk que cobre todo Y em Sp.
+    Greedy Set Cover: seleciona um subconjunto SB <= Sk que cobre todo Y em Sp.
 
     Parametros
     ----------
@@ -89,7 +89,7 @@ def greedy_set_cover(
         print(f"\n[Greedy] p={p} | |S15|={n_s15:,} | |Sp|={n_sp:,}")
         print(f"         Cobertura por X: C({k},{p})={cobertura_inicial:,}")
         print(f"         Extensoes por Y: C({n-p},{k-p})={extensoes_por_y:,}")
-        print(f"         Lower bound |SB| >= {n_sp // cobertura_inicial:,}\n")
+        print(f"         Lower bound |SB| >= {-(-n_sp // cobertura_inicial):,}\n")
 
     t0 = time.time()
 
@@ -313,10 +313,10 @@ def main():
     print()
     verificar_cobertura(sb, s_alvo, verbose=True)
 
-    lower_bound = comb(N_TESTE, P_ALVO) // comb(P_GRANDE, P_ALVO)
+    lower_bound = -(-comb(N_TESTE, P_ALVO) // comb(P_GRANDE, P_ALVO))
     print(f"  Lower bound LP: |SB| >= {lower_bound}")
-    print(f"  Solucao greedy: |SB|  = {len(sb)}")
-    print(f"  Gap de otimalidade: {len(sb)/lower_bound:.2f}x")
+    print(f"  Solucao greedy (nao otima): |SB| = {len(sb)}")
+    print(f"  Gap vs lower bound: {len(sb)/lower_bound:.2f}x")
 
 
 if __name__ == "__main__":

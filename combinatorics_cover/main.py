@@ -103,11 +103,12 @@ def perguntar_log(nome_log):
 
 def rodar_programa(numero, p=None):
     scripts = {
-        1: ("program1_generation.py", None),
-        2: ("program2_cover14.py",    f"logs_p14.txt"),
-        3: ("program3_cover13.py",    f"logs_p13.txt"),
-        4: ("program4_cover12.py",    f"logs_p12.txt"),
-        5: ("program5_cover11.py",    f"logs_p11.txt"),
+        1:  ("program1_generation.py",         None),
+        11: ("program1_generation_parallel.py", None),
+        2:  ("program2_cover14.py",             "logs_p14.txt"),
+        3:  ("program3_cover13.py",             "logs_p13.txt"),
+        4:  ("program4_cover12.py",             "logs_p12.txt"),
+        5:  ("program5_cover11.py",             "logs_p11.txt"),
     }
     script, nome_log = scripts[numero]
     log = perguntar_log(nome_log) if nome_log else None
@@ -200,7 +201,8 @@ def menu():
             print(linha_status(p, st))
 
         print("\n  --- Geracao ---")
-        print("  1. Programa 1 — Gerar e validar S15..S11")
+        print("  1. Programa 1 — Gerar e validar S15..S11 (sequencial)")
+        print(" 1b. Programa 1 — Gerar S15..S11 em paralelo (multiprocessing)")
 
         print("\n  --- Cobertura Greedy ---")
         print("  2. Programa 2 — SB{15,14}  (~18 min)")
@@ -225,6 +227,7 @@ def menu():
 
         if   opcao == "0":  break
         elif opcao == "1":  rodar_programa(1)
+        elif opcao == "1b": rodar_programa(11)
         elif opcao == "2":  rodar_programa(2)
         elif opcao == "3":  rodar_programa(3)
         elif opcao == "4":  rodar_programa(4)
