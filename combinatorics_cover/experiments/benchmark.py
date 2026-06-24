@@ -190,7 +190,7 @@ def run_one_solver(
     method, category_pt, solver_callable, slug = solver_map[solver_name]
     print(f"  - Running {method}...")
     elapsed_seconds, output = time_solver(solver_callable)
-    save_solution_masks(f"{preset_name}_{slug}", config, output.selected_masks)
+    save_solution_masks(slug, config, output.selected_masks)
     return make_result(method, category_pt, config, elapsed_seconds, output, target_masks)
 
 

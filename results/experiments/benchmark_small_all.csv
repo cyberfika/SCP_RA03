@@ -1,7 +1,7 @@
 method,category_pt,preset,n,k,p,elapsed_seconds,selected_count,lower_bound_lp,gap_vs_lb,coverage_percent,is_exactly_covered,notes_pt
-Greedy baseline,Algoritmo guloso,small,12,7,4,0.11044360000050801,27,15,1.8,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.
-Stochastic Greedy,Probabilístico / randômico,small,12,7,4,0.046029500001168344,29,15,1.9333333333333333,100.0,True,Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos.
-GRASP,Metaheurística,small,12,7,4,2.397745700000087,29,15,1.9333333333333333,100.0,True,20 construções; RCL=10; poda local=sim; seed=123.
-Greedy + poda local,Busca local pós-greedy,small,12,7,4,0.1031423000003997,27,15,1.8,100.0,True,Removeu 0 candidatos redundantes mantendo cobertura exata.
-Relaxação Lagrangiana,Relaxação / lower bound,small,12,7,4,1.3685199999999895,27,15,1.8,100.0,True,Relaxação Lagrangiana demonstrativa; 40 iterações; melhor bound lagrangiano=14.14; solução reparada por greedy.
-Column Generation,Programação linear / pricing,small,12,7,4,1.2287001000004238,143,15,9.533333333333333,100.0,True,Column Generation relaxado; 25 rodadas de pricing; valor LP=15.61; solução arredondada e reparada.
+Greedy baseline,Algoritmo guloso,small,12,7,4,0.07529940000131319,27,15,1.8,100.0,True,Baseline guloso determinístico com escolha de maior ganho marginal.
+Stochastic Greedy,Probabilístico / randômico,small,12,7,4,0.05688410000038857,29,15,1.9333333333333333,100.0,True,Amostra 256 por iteração; seed=42; fallback determinístico quando a amostra não cobre novos alvos.
+GRASP,Metaheurística,small,12,7,4,0.5157476000003953,29,15,1.9333333333333333,100.0,True,5 construções; RCL=10; poda local=sim; seed=123.
+Greedy + poda local,Busca local pós-greedy,small,12,7,4,0.07832539999981236,27,15,1.8,100.0,True,Removeu 0 candidatos redundantes mantendo cobertura exata.
+Relaxação Lagrangiana,Relaxação / lower bound,small,12,7,4,1.1791873000001942,27,15,1.8,100.0,True,Relaxação Lagrangiana demonstrativa; 40 iterações; melhor bound lagrangiano=14.14; solução reparada por greedy.
+Column Generation,Programação linear / pricing,small,12,7,4,1.0714674000009836,45,15,3.0,100.0,True,Column Generation relaxado; 25 rodadas de pricing; valor LP=15.61; solução arredondada e reparada.
