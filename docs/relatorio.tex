@@ -823,10 +823,9 @@ em $|\SB|$.
 
 \subsubsection{Greedy Paralelo Distribuído}
 
-Blelloch et al.~\cite{blelloch2011} propõem greedy paralelo com speedup linear
-no número de núcleos. Mirzasoleiman et al.~\cite{mirzasoleiman2013} propõem
-GREEDI: particionam $\mathcal{S}_{15}$ entre $m$ máquinas, cada uma executa
-greedy local e os resultados são combinados. Para $m=8$ núcleos, o speedup
+Mirzasoleiman et al.~\cite{mirzasoleiman2013} propõem GREEDI, um esquema de
+greedy paralelo distribuído: particionam $\mathcal{S}_{15}$ entre $m$ máquinas,
+cada uma executa greedy local e os resultados são combinados. Para $m=8$ núcleos, o speedup
 esperado é $6$--$7\times$, reduzindo o tempo de $p=11$ de $\approx 3{,}4$h
 para $\approx 30$ min.
 
@@ -845,7 +844,7 @@ para $\approx 30$ min.
 Abordagem & Ganho prático documentado & Limitação & Referência \\
 \midrule
 Algorithm Engineering (C/Cython) & $50$--$200\times$ sobre Python puro & Não muda $O(\cdot)$; custo de portabilidade & Sanders \& Kliemann 2016 \\
-Paralelismo (\texttt{multiprocessing}) & $\approx 7\times$ em 8 núcleos (GREEDI) & Overhead de sincronização & Blelloch et al.\ 2011 \\
+Paralelismo (\texttt{multiprocessing}) & $\approx 7\times$ em 8 núcleos (GREEDI) & Overhead de sincronização & Mirzasoleiman et al.\ 2013 \\
 Greedy Estocástico & $\approx K\times$ mais rápido/iter; mesma garantia $H(n)$ & Aleatoriedade controlável por semente & Mirzasoleiman et al.\ 2015 \\
 GRASP & 5--20\% melhor que greedy puro; paralelizável & Sem garantia adicional além de $H(n)$ & Feo \& Resende 1995 \\
 Simulated Annealing & 10--20\% abaixo do greedy para $p \in \{11,12\}$ & Sem garantia formal; requer tuning de $T$ & Kirkpatrick et al.\ 1983 \\
@@ -968,11 +967,6 @@ Greedy randomized adaptive search procedures.
 Resende, M.G.C., Ribeiro, C.C. (2016).
 \textit{Optimization by GRASP}.
 Springer, New York.
-
-\bibitem{blelloch2011}
-Blelloch, G.E., Harsha, P., Miller, G.L. (2011).
-Parallel set cover.
-\textit{Proceedings of SPAA 2011}, 231--240.
 
 \bibitem{mirzasoleiman2013}
 Mirzasoleiman, B., Karbasi, A., Sarkar, R., Krause, A. (2013).
