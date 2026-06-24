@@ -386,9 +386,9 @@ Como $\C{15}{p}\cdot\C{25-p}{15-p} \gg \log N_{15}$ para os valores considerados
 $p$ & $\C{15}{p}$ & $\C{25-p}{15-p}$ & Atualizações/iter & $K$ (greedy) & Estratégia \\
 \midrule
 14 & 15 & 11 & 165 & 532.555 & heap lazy \\
-13 & 105 & 66 & 6.930 & \textit{em execução} & heap lazy \\
+13 & 105 & 66 & 6.930 & 128.827 & heap lazy \\
 12 & 455 & 286 & 130.130 & 38.100 & argmax NumPy \\
-11 & 1.365 & 1.001 & 1.366.365 & \textit{em execução} & argmax NumPy \\
+11 & 1.365 & 1.001 & 1.366.365 & 12.733 & atualização paralela \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -399,9 +399,12 @@ O limiar de 10.000 atualizações por iteração determina a escolha:
   \item $p \in \{14, 13\}$ ($\leq 6.930$ atualizações): heap lazy preferível —
         as poucas atualizações custam $\bigo{\log N_{15}}$ cada, mas as muitas iterações $K$
         tornam o heap $\bigo{K \log N_{15}}$ competitivo.
-  \item $p \in \{12, 11\}$ ($\geq 130.130$ atualizações): argmax NumPy preferível —
-        evita os 130K+ \texttt{heappush} por iteração, que custam mais que uma varredura
-        $\bigo{N_{15}}$ em NumPy.
+  \item $p=12$ ($130.130$ atualizações): argmax NumPy preferível —
+        evita os 130K+ \texttt{heappush} por iteração, que custam mais que uma varredura
+        $\bigo{N_{15}}$ em NumPy.
+  \item $p=11$ ($1.366.365$ atualizações): atualização paralela preferível —
+        o volume de trabalho por iteração é grande o suficiente para amortizar
+        o custo de comunicação entre processos no Programa~5.
 \end{itemize}
 
 \subsubsection*{Prova de corretude do Greedy}
@@ -556,12 +559,12 @@ $\SB^* \leftarrow \mathcal{S}_{15}$\;
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{crrrrrr}
 \toprule
-$p$ & $|\OPT| \geq$ (LB-LP) & $|\OPT| \geq$ (LB-Sch) & $|\SB_{\text{greedy}}|$ & Gap vs. LB-Sch & Tempo (s) & $|\SB|/|\mathcal{S}_{15}|$ \\
+$p$ & $|\OPT| \geq$ (LB-LP) & $|\OPT| \geq$ (LB-Sch) & $|\SB_{\text{greedy}}|$ & Gap vs. LB-Sch & Tempo observado & $|\SB|/|\mathcal{S}_{15}|$ \\
 \midrule
-14 & 297.160 & 297.172 & 532.555 & $1{,}79\times$ & --- & 16{,}3\% \\
-13 & 49.527 & 58.887 & 128.827 & $2{,}19\times$ & --- & 3{,}9\% \\
-12 & 11.430 & 13.175 & 38.100 & $2{,}89\times$ & --- & 1{,}2\% \\
-11 & 3.266 & 3.370 & 12.733 & $3{,}78\times$ & --- & 0{,}4\% \\
+14 & 297.160 & 297.172 & 532.555 & $1{,}79\times$ & $\approx 18$ min & 16{,}3\% \\
+13 & 49.527 & 58.887 & 128.827 & $2{,}19\times$ & $\approx 3$ h & 3{,}9\% \\
+12 & 11.430 & 13.175 & 38.100 & $2{,}89\times$ & $\approx 79$ min & 1{,}2\% \\
+11 & 3.266 & 3.370 & 12.733 & $3{,}78\times$ & $\approx 3{,}4$ h & 0{,}4\% \\
 \bottomrule
 \end{tabular}%
 }
@@ -645,9 +648,9 @@ greedy é no máximo $1{,}79\times$ o ótimo.
 $p$ & Tempo observado & Limitante dominante & Melhoria possível \\
 \midrule
 14 & concluído & muitas iterações; 165 atualizações/iter & heap lazy e vetorização \\
-13 & \textit{em execução} & 6.930 atualizações/iter e heap grande & heap em batches ou Cython \\
+13 & concluído & 6.930 atualizações/iter e heap grande & heap lazy e batches \\
 12 & concluído & 130.130 atualizações/iter & argmax NumPy e Cython \\
-11 & \textit{em execução} & 1.366.365 atualizações/iter & C/Cython e paralelização \\
+11 & concluído & 1.366.365 atualizações/iter & atualização paralela no Programa~5 \\
 \bottomrule
 \end{tabular}%
 }
@@ -680,8 +683,8 @@ segue abaixo.
 A geração de $\mathcal{S}_{15}, \mathcal{S}_{14}, \ldots, \mathcal{S}_{11}$ é
 \emph{trivialmente paralelizável}: cada conjunto é inteiramente independente dos
 demais. Um \texttt{Pool} com 5 workers gera os 5 arrays simultaneamente,
-reduzindo o tempo total de $\approx 4$s para $\approx 1$s (speedup real próximo
-de $4\times$ com 4 núcleos físicos).
+reduzindo o tempo total observado de $\approx 80$s para $\approx 18{,}7$s
+(speedup real próximo de $4{,}3\times$ na execução local).
 
 \textbf{Programas~2 ($p=14$), 3 ($p=13$) e~4 ($p=12$).}
 Nestes três casos, a paralelização do laço interno de atualização de
@@ -742,9 +745,10 @@ Randômico & $\bigo{T \cdot N_{15} \cdot N_p}$ & Nenhuma & Sim & baseline \\
 
 \end{table}
 
-A estratégia adotada nos Programas 2--5 foi o Greedy, complementado pelo ILP
-pós-greedy para as instâncias em que os lower bounds indicam soluções menores
-($p \in \{11, 12\}$), o que tende a tornar o conjunto de candidatos mais manejável.
+A estratégia adotada nos Programas 2--5 foi o Greedy. O ILP pós-greedy foi
+analisado como refinamento possível para as instâncias em que os lower bounds
+indicam soluções menores ($p \in \{11, 12\}$), pois restringiria o universo de
+candidatos ao conjunto já produzido pelo greedy.
 
 % ---------------------------------------------------------------------------
 \section{Análise Comparativa de Abordagens Algorítmicas}
@@ -845,13 +849,12 @@ com lower bounds mais apertados que os obtidos por Schönheim.
 \subsubsection{Greedy Estocástico}
 
 Mirzasoleiman et al.~\cite{mirzasoleiman2015} propõem sortear aleatoriamente
-uma amostra de $|\mathcal{S}_{15}|/K$ candidatos a cada iteração e escolher o
-melhor da amostra, em vez de avaliar todos. Provam que esta abordagem preserva
-a garantia $H(n)$ do greedy determinístico com alta probabilidade, reduzindo o
-custo por iteração de $\bigo{|\mathcal{S}_{15}|}$ para
-$\bigo{|\mathcal{S}_{15}|/K}$ --- aproximadamente $K$ vezes mais rápido.
-Para $p=11$ ($K \approx 3.370$), o tempo estimado cai de $\approx 3{,}4$h para
-$\approx 4$ min. Esta modificação requer apenas 3 linhas no código existente.
+uma amostra de candidatos a cada iteração e escolher o melhor da amostra, em vez
+de avaliar todos os candidatos. No projeto, esta abordagem foi implementada em
+\texttt{experiments/stochastic\_greedy.py} como experimento controlado por
+semente, com \emph{fallback} determinístico quando a amostra não cobre novos
+alvos. O objetivo prático é reduzir drasticamente o tempo de seleção, aceitando
+um pequeno aumento em $|\SB|$.
 
 \subsubsection{GRASP}
 
@@ -876,8 +879,52 @@ em $|\SB|$.
 Mirzasoleiman et al.~\cite{mirzasoleiman2013} propõem GREEDI, um esquema de
 greedy paralelo distribuído: particionam $\mathcal{S}_{15}$ entre $m$ máquinas,
 cada uma executa greedy local e os resultados são combinados. Para $m=8$ núcleos, o speedup
-esperado é $6$--$7\times$, reduzindo o tempo de $p=11$ de $\approx 3{,}4$h
-para $\approx 30$ min.
+esperado pelos autores é $6$--$7\times$, o que corresponderia a reduzir o tempo
+de $p=11$ de $\approx 3{,}4$h para $\approx 30$ min (estimativa teórica;
+abordagem não executada neste projeto).
+
+% ---------------------------------------------------------------------------
+\subsection{Resultados Experimentais das Abordagens Alternativas}
+% ---------------------------------------------------------------------------
+
+Além dos resultados completos para $n=25$, foram executadas instâncias
+reduzidas que preservam a estrutura do problema de Set Cover e permitem comparar
+tempo, qualidade da solução e cobertura exata entre abordagens. Os resultados
+foram gerados pelos scripts em \texttt{combinatorics\_cover/experiments} e
+exportados para \texttt{results/experiments}.
+
+\begin{table}[H]
+\centering
+\caption{Comparação experimental em instâncias reduzidas.}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llrrp{5.8cm}}
+\toprule
+Instância & Método & Tempo & $|\SB|$ & Interpretação \\
+\midrule
+medium $(n=15,k=9,p=6)$ & Greedy baseline & $10{,}035$s & 140 & Referência determinística \\
+medium $(n=15,k=9,p=6)$ & Stochastic Greedy & $0{,}743$s & 152 & $13{,}5\times$ mais rápido; aumento de $8{,}6\%$ em $|\SB|$ \\
+medium $(n=15,k=9,p=6)$ & GRASP & $48{,}813$s & 143 & Mais caro; qualidade próxima do greedy \\
+medium $(n=15,k=9,p=6)$ & Relaxação Lagrangiana & $23{,}948$s & 140 & Bound lagrangiano $59{,}58$; solução reparada igual ao greedy \\
+medium $(n=15,k=9,p=6)$ & Column Generation & $18{,}551$s & 171 & Relaxação LP e pricing; solução arredondada e reparada \\
+\midrule
+large-demo $(n=16,k=10,p=6)$ & Greedy baseline & $24{,}895$s & 105 & Referência para escala maior \\
+large-demo $(n=16,k=10,p=6)$ & Stochastic Greedy & $1{,}208$s & 115 & $20{,}6\times$ mais rápido; aumento de $9{,}5\%$ em $|\SB|$ \\
+large-demo $(n=16,k=10,p=6)$ & GRASP & $143{,}862$s & 107 & $5{,}8\times$ mais lento; melhora marginal em $|\SB|$ \\
+large-demo $(n=16,k=10,p=6)$ & Greedy + poda local & $28{,}268$s & 105 & Removeu 0 candidatos redundantes mantendo cobertura exata \\
+\bottomrule
+\end{tabular}%
+}
+\label{tab:experimentos-alternativos}
+\end{table}
+
+Os experimentos mostram que o \emph{Stochastic Greedy} foi a alternativa com
+maior ganho de desempenho medido: reduziu o tempo em $13{,}5\times$ na instância
+\texttt{medium} e em $20{,}6\times$ na instância \texttt{large-demo}, com aumento
+inferior a $10\%$ no tamanho da solução. O GRASP validou o eixo de
+metaheurísticas, mas neste conjunto de testes não compensou o custo adicional.
+Relaxação Lagrangiana e Column Generation foram mantidas como abordagens
+cientificamente fundamentadas para obtenção de limites inferiores por
+Programação Linear relaxada e para estudo de alternativas ao ILP direto.
 
 % ---------------------------------------------------------------------------
 \subsection{Abordagens Práticas: Tabela Comparativa}
@@ -895,8 +942,8 @@ Abordagem & Ganho prático documentado & Limitação & Referência \\
 \midrule
 Algorithm Engineering (C/Cython) & $50$--$200\times$ sobre Python puro & Não muda $O(\cdot)$; custo de portabilidade & Sanders \& Kliemann 2016 \\
 Paralelismo (\texttt{multiprocessing}) & $\approx 7\times$ em 8 núcleos (GREEDI) & Overhead de sincronização & Mirzasoleiman et al.\ 2013 \\
-Greedy Estocástico & $\approx K\times$ mais rápido/iter; mesma garantia $H(n)$ & Aleatoriedade controlável por semente & Mirzasoleiman et al.\ 2015 \\
-GRASP & 5--20\% melhor que greedy puro; paralelizável & Sem garantia adicional além de $H(n)$ & Feo \& Resende 1995 \\
+Greedy Estocástico & $13{,}5\times$ a $20{,}6\times$ mais rápido nos benchmarks & Aumentou $|\SB|$ em $8{,}6$--$9{,}5\%$ & Mirzasoleiman et al.\ 2015 \\
+GRASP & Qualidade próxima do greedy; execução paralelizável & Mais lento nos benchmarks atuais & Feo \& Resende 1995 \\
 Simulated Annealing & 10--20\% abaixo do greedy para $p \in \{11,12\}$ & Sem garantia formal; requer tuning de $T$ & Kirkpatrick et al.\ 1983 \\
 CP-SAT (OR-Tools) & Ótimo sobre candidatos $\SB_\text{greedy}$ em minutos & Inviável direto sobre $\mathcal{S}_{15}$ & Perron et al.\ 2023 \\
 Algorithm Portfolios & Elimina escolha subótima por $p$ (heap vs.\ argmax) & Classificação empírica & Xu et al.\ (SATzilla) \\
@@ -920,7 +967,7 @@ Classificação & Abordagem & Justificativa \\
 \midrule
 Mais promissora & Algorithm Engineering (C/Cython + paralelismo) & $50$--$200\times$ de speedup; não altera a lógica matemática; implementável incrementalmente \\
 Segunda melhor & GRASP + Busca Local pós-greedy & 5--20\% de melhoria em $|\SB|$; fundamentado em Feo \& Resende (1995); execuções independentes paralelizáveis \\
-Baixo risco para protótipo & Greedy Estocástico & $K\times$ mais rápido/iteração; mesma garantia $H(n)$; 3 linhas de modificação no código atual \\
+Baixo risco para protótipo & Greedy Estocástico & Maior ganho medido nos benchmarks: $13{,}5\times$ a $20{,}6\times$ mais rápido, com acréscimo inferior a $10\%$ em $|\SB|$ \\
 Maior impacto teórico & Covering Designs / La Jolla Repository + Rödl 1985 & Pode fornecer ótimos já conhecidos; Rödl prova que o LB-LP é assintoticamente apertado \\
 Maior impacto prático & CP-SAT + Column Generation pós-greedy & Para $p=11$ ($|\SB| \approx 12.733$), Branch-and-Price pode encontrar ótimo exato em minutos \\
 \bottomrule

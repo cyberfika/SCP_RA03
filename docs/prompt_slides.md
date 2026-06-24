@@ -1,251 +1,399 @@
-# Prompt — Geração de Slides RA03 (Claude Design)
+# Prompt - Geracao de Slides Completos RA03
 
-Crie uma apresentação de slides completa em HTML/CSS (artifact) para uma
-apresentação acadêmica de 10 minutos. Design dark, profissional, navegável
-por botões Anterior/Próximo. Cada slide deve caber em 1 tela sem scroll.
+Crie um novo conjunto completo de slides para uma apresentacao academica de
+aproximadamente 10 minutos sobre o trabalho RA03 de Complexidade de Algoritmos.
 
----
+O resultado deve ser uma apresentacao completa, coerente, visualmente polida e
+pronta para defesa oral. Gere todos os slides, incluindo capa.
 
-# CONTEXTO
-
-Disciplina: Complexidade de Algoritmos — PUCPR (5º período)
-Professor: Edson Emílio Scalabrin
-Trabalho: RA03 — Cobertura de Combinações (Minimum Set Cover)
-
-A apresentação DEVE cobrir obrigatoriamente:
-1. Modelagem do problema
-2. Estratégia algorítmica adotada
-3. Estruturas de dados utilizadas
-4. Resultados obtidos
-5. Análise de complexidade (tempo, espaço, gargalos, escalabilidade, comparação)
-6. Limitações e possíveis melhorias
+Preserve um estilo profissional escuro, tecnico e academico, mas nao copie
+mecanicamente nenhum deck anterior. O objetivo e produzir uma versao completa,
+mais clara e mais convincente.
 
 ---
 
-# SLIDES (9 no total)
+## Informacoes da Capa
 
-## Slide 1 — Modelagem do Problema
-- Universo U = {1, 2, ..., 25}
-- S_15 = todos os subconjuntos de tamanho 15 de U → C(25,15) = 3.268.760 conjuntos
-- S_p  = todos os subconjuntos de tamanho p de U
-- Cardinalidades:
+A capa deve conter obrigatoriamente:
 
-| Conjunto | Fórmula    | Cardinalidade |
-|----------|------------|---------------|
-| S_15     | C(25,15)   | 3.268.760     |
-| S_14     | C(25,14)   | 4.457.400     |
-| S_13     | C(25,13)   | 5.200.300     |
-| S_12     | C(25,12)   | 5.200.300     |
-| S_11     | C(25,11)   | 4.457.400     |
-
-- Objetivo formal: para cada p ∈ {14,13,12,11}, encontrar o menor SB ⊆ S_15 tal que:
-    ∀ Y ∈ S_p,  ∃ X ∈ SB  tal que  Y ⊆ X
-- Formulação ILP:
-    Variáveis: x_i ∈ {0,1} para cada X_i ∈ S_15
-    Minimizar:  Σ x_i
-    Sujeito a:  Σ_{i: Y⊆X_i} x_i ≥ 1,  ∀ Y ∈ S_p
-- Este é o Minimum Set Cover — NP-difícil (Karp, 1972)
-
-## Slide 2 — Por que ILP Direto é Inviável?
-- O ILP cresce em escala proibitiva:
-
-| p  | Variáveis | Restrições  | Coeficientes não-nulos | Viável? |
-|----|-----------|-------------|------------------------|---------|
-| 14 | 3.268.760 | 4.457.400   | ~67 milhões            | ✗       |
-| 13 | 3.268.760 | 5.200.300   | ~546 milhões           | ✗       |
-| 12 | 3.268.760 | 5.200.300   | ~2,37 bilhões          | ✗       |
-| 11 | 3.268.760 | 4.457.400   | ~6,08 bilhões          | ✗       |
-
-- Força bruta: 2^3.268.760 possibilidades → impossível
-- Inaproximável abaixo de (1-ε)·ln(n) a menos que P=NP (Feige, 1998)
-- Solução: algoritmo greedy com garantia teórica de ln(n)-aproximação
-
-## Slide 3 — Lower Bounds (base para medir qualidade)
-- Lower Bound LP: cada X ∈ S_15 cobre exatamente C(15,p) subconjuntos de tamanho p
-    |SB| ≥ ⌈ C(25,p) / C(15,p) ⌉    (prova: contagem direta)
-- Lower Bound Schönheim (1964): L(n,k,t) = ⌈(n/k)·L(n-1,k-1,t-1)⌉ — mais apertado
-
-| p  | C(15,p)  | LB-LP   | LB-Schönheim |
-|----|----------|---------|--------------|
-| 14 | 15       | 297.160 | 297.172      |
-| 13 | 105      | 49.527  | 58.887       |
-| 12 | 455      | 11.430  | 13.175       |
-| 11 | 1.365    | 3.266   | 3.370        |
-
-- Insight: p=11 exige SB mínimo de apenas ~3.370 elementos de 3,3 milhões disponíveis
-- Paradoxo: menor p → SB menor, mas mais trabalho por iteração do greedy
-
-## Slide 4 — Estruturas de Dados
-Quatro estruturas centrais, todas indexadas por bitmask uint32:
-
-1. BITMASK uint32 (representação de subconjuntos)
-   - Cada subconjunto de {1..25} → inteiro de 25 bits
-   - Verificar Y ⊆ X: (X & Y) == Y  →  O(1)
-   - Arrays NumPy de uint32: S_15 ocupa 13 MB; S_p ocupa até 21 MB
-
-   | Operação        | frozenset | bitmask | Ganho |
-   |-----------------|-----------|---------|-------|
-   | Verificar Y ⊆ X | O(p)      | O(1)    | ~15×  |
-   | Vetorizar NumPy | ✗         | ✓       | ~100× |
-   | Memória/elemento| ~300 bytes| 4 bytes | ~75×  |
-
-2. DICIONÁRIOS HASH s15_index e sp_index
-   - s15_index: bitmask → índice em S_15  (3,3M entradas, lookup O(1))
-   - sp_index:  bitmask → índice em S_p   (até 5,2M entradas, lookup O(1))
-   - Construção: O(|S_15| + |S_p|) — fase de pré-processamento
-
-3. ARRAY count[i]  (int32, tamanho |S_15|)
-   - count[i] = número de Y ∈ S_p ainda não cobertos que X_i cobre
-   - Inicializado com C(15,p) para todo i
-   - Decrementado a cada Y coberto pelos vizinhos de X*
-   - Permite encontrar argmax sem recomputar tudo
-
-4. HEAP LAZY (max-heap via valores negativos) — usado para p=14 e p=13
-   - Entradas: (−count[i], i) — o menor negativo é o maior count
-   - Evita percorrer o array inteiro para encontrar o máximo
-   - "Lazy": entradas desatualizadas são descartadas no pop
-   - Alternativa para p=12,11: NumPy argmax vetorizado (mais rápido quando
-     há muitas atualizações por iteração)
-
-5. ARRAY nao_coberto[j]  (bool, tamanho |S_p|)
-   - nao_coberto[j] = True se Y_j ainda não foi coberto
-   - Permite ignorar Y já cobertos em O(1) por lookup
-
-## Slide 5 — Estratégia Algorítmica (Greedy)
-- Pseudocódigo formal:
-  ```
-  Entrada: S_15, S_p
-  Pré-proc: construir s15_index, sp_index, count[], nao_coberto[]
-  SB ← ∅
-  enquanto ∃ j com nao_coberto[j]:
-      X* ← argmax_i count[i]          // heap lazy ou numpy argmax
-      SB ← SB ∪ {X*};  count[X*] ← −1
-      para cada combo Y de p elementos de X*:
-          se nao_coberto[sp_index[Y]]:
-              nao_coberto[sp_index[Y]] ← False
-              para cada X que contém Y:   // C(25-p, 15-p) extensões
-                  count[s15_index[X]] -= 1
-                  atualizar heap (se heap lazy)
-  retornar SB
-  ```
-- Garantia de aproximação (Johnson 1974, Lovász 1975):
-    |SB_greedy| ≤ H(|S_p|) · |OPT|  onde H(m) ≈ ln(m) + 0,577
-    Para |S_p| = 4,5M: garantia ≤ 15,4× |OPT|
-- Esta é a melhor razão polinomial possível (Feige 1998; Dinur & Steurer 2014)
-- Duas estratégias de argmax selecionadas automaticamente:
-  - Heap lazy    → p=14,13 (poucas atualizações/iter: ≤ 6.930)
-  - NumPy argmax → p=12,11 (muitas atualizações/iter: > 130.000)
-
-## Slide 6 — Análise de Complexidade: Tempo e Espaço
-Notação: N15 = C(25,15) = 3.268.760 | Np = C(25,p) | K = |SB_greedy|
-
-PROGRAMA 1 — Geração de S_p:
-| Métrica       | Complexidade           | Justificativa                    |
-|---------------|------------------------|----------------------------------|
-| Tempo         | Θ(C(n,p))              | Enumera cada combinação 1 vez    |
-| Espaço (lazy) | Θ(p)                   | Pilha do iterador                |
-| Espaço (array)| Θ(C(n,p))              | Armazena todos os bitmasks       |
-
-PROGRAMAS 2–5 — Greedy Set Cover:
-| Métrica           | Heap lazy (p=14,13)                      | NumPy argmax (p=12,11)             |
-|-------------------|------------------------------------------|------------------------------------|
-| Pré-processamento | O(N15 + Np)                              | O(N15 + Np)                        |
-| Argmax por iter   | O(log N15) amortizado                    | O(N15)                             |
-| Atualizações/iter | O(C(15,p)·C(25-p,15-p))                 | O(C(15,p)·C(25-p,15-p))           |
-| Tempo total       | O(K·C(15,p)·C(25-p,15-p)·log N15)       | O(K·(C(15,p)·C(25-p,15-p)+N15))  |
-| Espaço            | O(N15 + Np)                              | O(N15 + Np)                        |
-| Ω (melhor caso)   | Ω(N15 + Np)                              | Ω(N15 + Np)                        |
-
-Valores concretos de C(15,p)·C(25-p,15-p) por iteração:
-| p  | C(15,p) | C(25-p,15-p) | Produto (updates/iter) | K (obtido) |
-|----|---------|--------------|------------------------|------------|
-| 14 | 15      | 11           | 165                    | 532.555    |
-| 13 | 105     | 66           | 6.930                  | 128.827    |
-| 12 | 455     | 286          | 130.130                | 38.100     |
-| 11 | 1.365   | 1.001        | 1.366.365              | 12.733     |
-
-## Slide 7 — Gargalos, Escalabilidade e Comparação
-GARGALOS PRINCIPAIS:
-1. Atualizações de count por iteração: cresce como C(15,p)·C(25-p,15-p)
-   → p=11: 1,37M operações por iteração (dominante)
-2. Heap lazy: operações de push acumulam entradas obsoletas (memória extra)
-3. Construção de índices: O(N15 + Np) mas executada 1 vez — 14–30s na prática
-4. Para p=12,11: NumPy argmax percorre 3,3M elementos/iter → custo O(N15) por iter
-
-ESCALABILIDADE:
-- A solução escala linearmente em memória: O(N15 + Np) ≈ 30–60 MB total ✓
-- Tempo NÃO escala bem com n crescente: C(n,k) cresce exponencialmente em n
-- Para n=30: C(30,15) = 155M → inviável com a abordagem atual
-- Limite prático: n ≤ 26–27 com hardware convencional
-
-COMPARAÇÃO ENTRE ESTRATÉGIAS:
-| Abordagem      | Tempo       | Espaço     | Garante ótimo? | Gap observado |
-|----------------|-------------|------------|----------------|---------------|
-| Força bruta    | Ω(2^N15)    | O(N15)     | ✓              | 1,00×         |
-| ILP direto     | NP (exp.)   | O(N15·Np)  | ✓              | 1,00×         |
-| Greedy heap    | ver tabela  | O(N15+Np)  | ✗ (ln n)       | 1,79–2,19×    |
-| Greedy argmax  | ver tabela  | O(N15+Np)  | ✗ (ln n)       | 2,89–3,78×    |
-| Randômico      | O(T·N15·Np) | O(N15+Np)  | ✗ (nenhuma)    | —             |
-
-## Slide 8 — Resultados Obtidos
-Tabela central (destaque visual máximo):
-
-| p  | |S_p|      | LB-LP   | LB-Schönheim | |SB_greedy| | Gap vs LB-Sch | Tempo   | % de S_15 |
-|----|-----------|---------|--------------|------------|---------------|---------|-----------|
-| 14 | 4.457.400 | 297.160 | 297.172      | 532.555    | 1,79×         | ~18 min | 16,3%     |
-| 13 | 5.200.300 | 49.527  | 58.887       | 128.827    | 2,19×         | ~3 h    | 3,9%      |
-| 12 | 5.200.300 | 11.430  | 13.175       | 38.100     | 2,89×         | ~79 min | 1,2%      |
-| 11 | 4.457.400 | 3.266   | 3.370        | 12.733     | 3,78×         | ~3,4 h  | 0,4%      |
-
-- Garantia teórica permitia gap até 15,4× — obtivemos 1,79–3,78×
-  → greedy 4–9× melhor que o pior caso teórico
-- Resultado esperado pela teoria de Rödl (1985): LB-LP é assintoticamente
-  apertado para instâncias uniformes C(n,k,t) quando n→∞
-- Todos os resultados verificados por amostragem de cobertura (10.000 amostras aleatórias)
-
-## Slide 9 — Limitações e Possíveis Melhorias
-LIMITAÇÕES:
-- ILP direto inviável em escala completa (6 bilhões de coeficientes para p=11)
-- Solução ótima não garantida para p=13,14 (NP-difícil)
-- Greedy não permite refinamento pós-execução (sem backtracking)
-- Escalabilidade limitada: n>27 inviável com abordagem atual
-- Tempo de execução alto para p=13 (~3h) e p=11 (~3,4h)
-
-POSSÍVEIS MELHORIAS:
-1. ILP pós-greedy (p=11,12): usar SB_greedy como candidatos → reduz variáveis
-   de 3,3M para ~12K–38K; ILP torna-se tratável em minutos
-2. Column generation: gerar variáveis do ILP sob demanda → viável para p=11
-3. Paralelização: multiprocessing para calcular count[] em paralelo
-   → speedup teórico ~8× em 8 núcleos (gargalo é embaraçosamente paralelo)
-4. Metaheurísticas pós-greedy: simulated annealing para remover elementos
-   redundantes de SB → pode reduzir o gap de 1,79× para ~1,2–1,3×
-5. Simetria combinatória: o grupo S_25 age sobre o problema → redução
-   por órbitas pode diminuir o espaço de busca em até 25! / |estabilizador|
+- Nome do trabalho: **Cobertura de Combinacoes (Minimum Set Cover)**
+- Identificacao: **Trabalho Avaliativo - RA03**
+- Disciplina: **Complexidade de Algoritmos**
+- Instituicao: **Pontificia Universidade Catolica do Parana - PUCPR**
+- Curso: **Bacharelado em Ciencia da Computacao**
+- Aluno: **Jafte Carneiro Fagundes da Silva**
+- Professor: **Edson Emilio Scalabrin**
+- Local e ano: **Curitiba, 2026**
 
 ---
 
-# AMBIENTE DE EXECUÇÃO (hardware real onde os experimentos foram rodados)
+## Contexto do Problema
 
-- Dispositivo: Dell OptiPlex 9020
-- Processador: Intel Core i7-4770 @ 3,40 GHz (4 núcleos / 8 threads)
-- RAM: 32 GB
-- Placa gráfica: Intel HD Graphics 4600 (sem GPU dedicada — processamento 100% CPU)
-- Armazenamento: HDD/SSD, 6,82 TB total
-- Sistema operacional: Windows 11 Pro 64 bits
+Universo:
 
-Mencionar no Slide 8 (Resultados) como nota de rodapé da tabela:
-"Experimentos executados em Intel Core i7-4770 @ 3,40 GHz, 32 GB RAM, sem GPU."
+```text
+U = {1, 2, ..., 25}
+```
+
+Conjuntos:
+
+```text
+S15 = todos os subconjuntos de tamanho 15 de U
+Sp  = todos os subconjuntos de tamanho p de U, para p em {14, 13, 12, 11}
+```
+
+Cardinalidades:
+
+| Conjunto | Formula  | Cardinalidade |
+|---|---:|---:|
+| S15 | C(25,15) | 3.268.760 |
+| S14 | C(25,14) | 4.457.400 |
+| S13 | C(25,13) | 5.200.300 |
+| S12 | C(25,12) | 5.200.300 |
+| S11 | C(25,11) | 4.457.400 |
+
+Objetivo:
+
+Para cada `p in {14,13,12,11}`, encontrar um subconjunto
+`SB15,p subset S15` tal que todo `Y in Sp` esteja contido em pelo menos um
+`X in SB15,p`.
+
+Formalmente:
+
+```text
+Para todo Y em Sp, existe X em SB15,p tal que Y subset X
+```
+
+O problema e uma instancia de **Minimum Set Cover**, conhecido por ser
+NP-dificil.
 
 ---
 
-# REQUISITOS DE DESIGN
+## Requisitos Obrigatorios do Enunciado
 
-- 9 slides navegáveis (botões ← Anterior / Próximo → + "Slide N de 9")
-- Fundo: #0f1117; texto: #e2e8f0; destaque: #38bdf8 (azul ciano)
-- Tabelas: cabeçalho em #1e3a5f, linhas alternadas #1a1f2e / #141820
-- Slide 8 (resultados): tabela com borda destacada e fonte ligeiramente maior
-- Código/pseudocódigo: fundo #1e1e2e, fonte monospace, syntax highlight simples
-- Fórmulas matemáticas: fonte monospace em cor de destaque
-- Fonte: system-ui / Inter / Segoe UI
-- Rodapé fixo em todos os slides: "PUCPR · Complexidade de Algoritmos · RA03 · 2026"
-- Slide atual destacado visualmente no rodapé (ex: ● ○ ○ ○ ...)
+A apresentacao deve contemplar explicitamente:
+
+1. Modelagem do problema.
+2. Estrategia algoritmica adotada.
+3. Estruturas de dados utilizadas.
+4. Resultados obtidos.
+5. Analise de complexidade:
+   - tempo;
+   - espaco;
+   - gargalos computacionais;
+   - escalabilidade;
+   - comparacao de estrategias.
+6. Limitacoes e possiveis melhorias.
+7. Discussao das alternativas sugeridas no enunciado:
+   - Algoritmos Gulosos;
+   - Branch and Bound;
+   - Programacao Inteira;
+   - Algoritmos Probabilisticos;
+   - Algoritmos Randomicos;
+   - Metaheuristicas;
+   - Computacao Paralela ou Distribuida;
+   - Outras abordagens fundamentadas na literatura cientifica.
+
+---
+
+## Conteudo Tecnico que Deve Aparecer
+
+### 1. Modelagem
+
+Explique que cada candidato `X in S15` cobre todos os subconjuntos `Y in Sp`
+tais que `Y subset X`.
+
+Mostre a formulacao por Programacao Linear Inteira (ILP):
+
+```text
+xi in {0,1}, para cada Xi in S15
+minimizar sum xi
+sujeito a sum_{i: Y subset Xi} xi >= 1, para todo Y in Sp
+```
+
+Explique tambem a diferenca entre:
+
+- **LP**: Programacao Linear relaxada, com variaveis continuas.
+- **ILP**: Programacao Linear Inteira, com variaveis inteiras/binarias.
+
+### 2. Por que ILP direto e inviavel
+
+Use a tabela correta:
+
+| p | Variaveis | Restricoes | Coeficientes nao-nulos | Viavel? |
+|---:|---:|---:|---:|:---:|
+| 14 | 3.268.760 | 4.457.400 | 49.031.400 | Nao |
+| 13 | 3.268.760 | 5.200.300 | 343.219.800 | Nao |
+| 12 | 3.268.760 | 5.200.300 | 1.487.285.800 | Nao |
+| 11 | 3.268.760 | 4.457.400 | 4.461.857.400 | Nao |
+
+Explique que o ILP e exato, mas inviavel em escala completa por memoria e tempo.
+
+### 3. Lower Bounds
+
+Use os limites:
+
+| p | C(15,p) | LB-LP | LB-Schonheim |
+|---:|---:|---:|---:|
+| 14 | 15 | 297.160 | 297.172 |
+| 13 | 105 | 49.527 | 58.887 |
+| 12 | 455 | 11.430 | 13.175 |
+| 11 | 1.365 | 3.266 | 3.370 |
+
+Explique:
+
+- LB-LP vem de contagem direta: cada `X in S15` cobre `C(15,p)` alvos.
+- Schonheim fornece limite inferior combinatorio mais apertado.
+
+### 4. Estruturas de Dados
+
+Apresente as estruturas:
+
+- bitmask `uint32` para representar subconjuntos;
+- teste de inclusao em O(1): `(X & Y) == Y`;
+- arrays NumPy;
+- dicionarios hash:
+  - `s15_index: mask -> indice`;
+  - `sp_index: mask -> indice`;
+- array `count[]`;
+- array booleano `nao_coberto[]`;
+- heap lazy para `p=14` e `p=13`;
+- `np.argmax` para `p=12`;
+- atualizacao paralela no Programa 5 para `p=11`.
+
+### 5. Algoritmo Greedy
+
+Mostre o pseudocodigo:
+
+```text
+Entrada: S15, Sp
+Pre-processamento: construir indices, count[] e nao_coberto[]
+SB <- vazio
+
+enquanto existir alvo nao coberto:
+    escolher X* com maior count[X]
+    adicionar X* a SB
+    marcar X* como indisponivel
+
+    para cada Y subset X* com |Y| = p:
+        se Y ainda nao coberto:
+            marcar Y como coberto
+            para cada X que contem Y:
+                decrementar count[X]
+
+retornar SB
+```
+
+Explique a garantia:
+
+```text
+|SB_greedy| <= H(|Sp|) * |OPT|
+```
+
+Onde `H(n) ~= ln(n) + 0,577`.
+
+### 6. Complexidade
+
+Use a notacao:
+
+```text
+N15 = C(25,15)
+Np  = C(25,p)
+K   = |SB_greedy|
+A   = C(15,p) * C(25-p,15-p)
+```
+
+Valores por iteracao:
+
+| p | C(15,p) | C(25-p,15-p) | A = updates/iter | K obtido | Estrategia |
+|---:|---:|---:|---:|---:|---|
+| 14 | 15 | 11 | 165 | 532.555 | heap lazy |
+| 13 | 105 | 66 | 6.930 | 128.827 | heap lazy |
+| 12 | 455 | 286 | 130.130 | 38.100 | NumPy argmax |
+| 11 | 1.365 | 1.001 | 1.366.365 | 12.733 | atualizacao paralela |
+
+Explique:
+
+- Programa 1: geracao de combinacoes em `Theta(C(n,p))`.
+- Programas 2-5: greedy set cover.
+- Gargalo principal: atualizacao de `count[]`.
+- Espaco: `O(N15 + Np)`.
+
+---
+
+## Resultados Principais
+
+Use a tabela:
+
+| p | |Sp| | LB-LP | LB-Schonheim | |SB_greedy| | Gap vs LB-Sch | Tempo | % de S15 |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 14 | 4.457.400 | 297.160 | 297.172 | 532.555 | 1,79x | ~18 min | 16,3% |
+| 13 | 5.200.300 | 49.527 | 58.887 | 128.827 | 2,19x | ~3 h | 3,9% |
+| 12 | 5.200.300 | 11.430 | 13.175 | 38.100 | 2,89x | ~79 min | 1,2% |
+| 11 | 4.457.400 | 3.266 | 3.370 | 12.733 | 3,78x | ~3,4 h | 0,4% |
+
+Mensagem principal:
+
+- A garantia teorica permitiria gap de ate aproximadamente `15,4x`.
+- Os resultados reais ficaram entre `1,79x` e `3,78x`.
+- Portanto, o greedy ficou entre `4x` e `9x` melhor que o pior caso teorico.
+
+Importante:
+
+Nao afirmar que auditoria exata foi concluida para `p=11` ou `p=12` se isso
+nao estiver comprovado. Se mencionar auditoria, escrever:
+
+```text
+A auditoria exata deve permanecer pendente ate o termino da execucao de audit_cobertura.py.
+```
+
+---
+
+## Experimentos Alternativos
+
+Inclua slides especificos para os novos experimentos, com foco em ganhos de
+desempenho.
+
+### Instancia medium
+
+`n=15, k=9, p=6`
+
+| Metodo | Tempo | |SB| | Leitura |
+|---|---:|---:|---|
+| Greedy baseline | 10,035 s | 140 | referencia deterministica |
+| Stochastic Greedy | 0,743 s | 152 | 13,5x mais rapido; +8,6% em |SB| |
+| GRASP | 48,813 s | 143 | mais caro; qualidade proxima do greedy |
+| Relaxacao Lagrangiana | 23,948 s | 140 | bound 59,58; reparo igual ao greedy |
+| Column Generation | 18,551 s | 171 | relaxacao LP e pricing; solucao arredondada e reparada |
+
+### Instancia large-demo
+
+`n=16, k=10, p=6`
+
+| Metodo | Tempo | |SB| | Leitura |
+|---|---:|---:|---|
+| Greedy baseline | 24,895 s | 105 | referencia para escala maior |
+| Stochastic Greedy | 1,208 s | 115 | 20,6x mais rapido; +9,5% em |SB| |
+| GRASP | 143,862 s | 107 | 5,8x mais lento; melhora marginal em |SB| |
+| Greedy + poda local | 28,268 s | 105 | removeu 0 candidatos redundantes |
+
+Conclusao dos experimentos:
+
+- Stochastic Greedy foi a alternativa com maior ganho de desempenho medido.
+- Reduziu o tempo em `13,5x` no `medium` e `20,6x` no `large-demo`.
+- O custo foi aumento inferior a `10%` no tamanho da solucao.
+- GRASP validou o eixo de metaheuristicas, mas nao compensou o custo adicional
+  nos benchmarks atuais.
+- Relaxacao Lagrangiana e Column Generation entram como abordagens cientificas
+  para lower bounds, relaxacao de Programacao Linear e alternativas ao ILP direto.
+
+---
+
+## Paralelismo
+
+Explique que ha paralelismo em:
+
+1. Programa 1:
+   - geracao independente de `S15`, `S14`, `S13`, `S12`, `S11`;
+   - tempo sequencial observado: ~80 s;
+   - tempo paralelo observado: ~18,7 s;
+   - speedup aproximado: 4,3x.
+
+2. Programa 5:
+   - caso `p=11`;
+   - maior custo por iteracao: `1.366.365` updates/iter;
+   - volume suficiente para amortizar overhead de multiprocessing;
+   - estrategia: atualizacao paralela de `count[]`.
+
+Explique por que os Programas 2, 3 e 4 nao foram paralelizados da mesma forma:
+
+- `p=14`: apenas 165 updates/iter;
+- `p=13`: 6.930 updates/iter;
+- `p=12`: 130.130 updates/iter, mas `np.argmax` e overhead de IPC tornam o ganho
+  menos evidente;
+- no `p=11`, o volume e grande o bastante para justificar paralelismo.
+
+---
+
+## Limitacoes e Melhorias
+
+Inclua:
+
+- ILP direto inviavel em escala completa.
+- Greedy nao garante solucao otima global.
+- Cobertura exata em escala completa e cara.
+- Escalabilidade limitada para `n > 27`.
+- Tempo ainda alto para `p=13` e `p=11`.
+
+Melhorias:
+
+- ILP pos-greedy como refinamento possivel, nao como resultado principal.
+- Branch and Bound / Branch-and-Price sobre espaco reduzido.
+- Column Generation.
+- Relaxacao Lagrangiana.
+- Simulated Annealing pos-greedy.
+- GRASP paralelo com mais restarts.
+- Bitsets vetorizados, Cython ou C/C++ para gargalos.
+- Distribuicao de trabalho em multiplos processos/maquinas.
+
+---
+
+## Estrutura Sugerida dos Slides
+
+Crie entre 11 e 13 slides:
+
+1. Capa.
+2. Modelagem formal do problema.
+3. Por que ILP direto e forca bruta sao inviaveis.
+4. Lower bounds e criterio de qualidade.
+5. Estruturas de dados.
+6. Algoritmo greedy e garantia teorica.
+7. Analise de complexidade.
+8. Gargalos e paralelismo.
+9. Resultados principais para `n=25`.
+10. Eixo comparativo das abordagens do enunciado.
+11. Experimentos alternativos e ganhos medidos.
+12. Limitacoes e melhorias.
+13. Conclusao tecnica, se houver espaco.
+
+---
+
+## Requisitos de Design
+
+- Apresentacao completa, coesa e moderna.
+- Fundo escuro profissional.
+- Paleta sugerida:
+  - fundo: `#020617` ou `#0f1117`;
+  - texto principal: `#e2e8f0`;
+  - texto secundario: `#94a3b8`;
+  - destaque: `#38bdf8`;
+  - sucesso/resultado: `#34d399`;
+  - alerta/limitacao: `#f87171`.
+- Usar tabelas legiveis, nao muito carregadas.
+- Usar tipografia moderna: Inter, Segoe UI, system-ui ou equivalente.
+- Usar rodape discreto:
+
+```text
+PUCPR · Complexidade de Algoritmos · RA03 · 2026
+```
+
+- Todos os slides devem caber em uma tela, sem rolagem.
+- Se gerar HTML/CSS, incluir navegacao por botoes Anterior/Proximo e indicador
+  "Slide N de M".
+- Se gerar PPTX, manter todos os textos editaveis.
+- Evitar excesso de texto corrido; priorizar tabelas, blocos comparativos,
+  diagramas e mensagens de conclusao.
+
+---
+
+## Regras de Precisao
+
+- Nao inventar resultados.
+- Nao afirmar otimalidade global.
+- Nao dizer que auditoria exata foi concluida sem evidencia local.
+- Nao dizer que ILP pos-greedy foi executado como resultado principal.
+- Explicar siglas quando aparecerem pela primeira vez:
+  - LP = Programacao Linear;
+  - ILP = Programacao Linear Inteira;
+  - GRASP = Greedy Randomized Adaptive Search Procedure.
+- Manter todos os numeros exatamente como informados neste prompt.
