@@ -68,8 +68,8 @@ PRESETS: dict[str, ExperimentConfig] = {
     "small": ExperimentConfig(name="small", n=12, k=7, p=4),
     # Ainda barato, mas já evidencia crescimento combinatório.
     "medium": ExperimentConfig(name="medium", n=15, k=9, p=6),
-    # Usado para métodos construtivos; LP/CG pode ficar pesado.
-    "large-demo": ExperimentConfig(name="large-demo", n=18, k=10, p=7),
+    # Maior que medium, mas ainda reprodutível em Python puro.
+    "large-demo": ExperimentConfig(name="large-demo", n=16, k=10, p=6),
 }
 
 

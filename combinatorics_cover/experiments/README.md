@@ -43,6 +43,10 @@ python combinatorics_cover\experiments\benchmark.py --preset medium --solver all
 python combinatorics_cover\experiments\benchmark.py --preset large-demo --solver all --skip-advanced-on-large
 ```
 
+The `large-demo` preset is still reduced relative to the real assignment
+instance. It is intentionally sized to finish in Python while showing growth
+against the `small` and `medium` presets.
+
 ## Presentation Interpretation
 
 Use the exported Markdown table to show that the project did not only cite
