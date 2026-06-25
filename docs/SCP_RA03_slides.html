@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SCP_RA03 — Cobertura de Combinações</title>
+<style>
+  :root {
+    --bg:      #0f1117;
+    --panel:   #1e293b;
+    --panel2:  #162131;
+    --border:  #1e405e;
+    --main:    #e2e8f0;
+    --sec:     #94a3b8;
+    --accent:  #38bdf8;
+    --ok:      #34d399;
+    --warn:    #f87171;
+    --gold:    #fbbf24;
+    --hdr:     #0c2a45;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #000;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: var(--main);
+  }
+  #stage {
+    width: min(100vw, calc(100vh * 16/9));
+    aspect-ratio: 16/9;
+    position: relative;
+    overflow: hidden;
+  }
+  .slide {
+    display: none;
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    padding: 0;
+  }
+  .slide.active { display: block; }
+
+  /* Top accent bar */
+  .top-bar {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 0.5%;
+    background: var(--accent);
+  }
+  .slide-title {
+    position: absolute;
+    top: 1%; left: 3%;
+    right: 3%;
+    font-size: 3.2vmin;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.2;
+  }
+  .slide-subtitle {
+    position: absolute;
+    top: 9%; left: 3%; right: 3%;
+    font-size: 1.5vmin;
+    color: var(--sec);
+  }
+  .footer {
+    position: absolute;
+    bottom: 1%;
+    left: 0; right: 0;
+    text-align: center;
+    font-size: 1.1vmin;
+    color: var(--sec);
+  }
+
+  /* Nav */
+  #nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+  #nav button {
+    background: var(--hdr);
+    color: var(--accent);
+    border: 1px solid var(--border);
+    padding: 0.3rem 1.2rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: inherit;
+    transition: background 0.15s;
+  }
+  #nav button:hover { background: var(--panel); }
+  #nav button:disabled { opacity: 0.3; cursor: default; }
+  #counter { color: var(--sec); font-size: 0.9rem; min-width: 6rem; text-align: center; }
+
+  /* Layout helpers */
+  .col2 { position: absolute; display: flex; flex-direction: column; }
+  .panel {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2vmin 1.4vmin;
+  }
+  .panel2 { background: var(--panel2); }
+  h3 { font-size: 1.7vmin; color: var(--accent); margin-bottom: 0.5vmin; }
+  h4 { font-size: 1.5vmin; color: var(--accent); margin-bottom: 0.4vmin; }
+  p, li { font-size: 1.35vmin; line-height: 1.5; color: var(--main); }
+  ul { padding-left: 1.2em; }
+  li { margin-bottom: 0.2vmin; }
+  .ok    { color: var(--ok); }
+  .warn  { color: var(--warn); }
+  .sec   { color: var(--sec); }
+  .gold  { color: var(--gold); }
+  .accent{ color: var(--accent); }
+  .bold  { font-weight: 700; }
+  .mono  {
+    font-family: 'Courier New', monospace;
+    background: var(--panel2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.8vmin 1vmin;
+    font-size: 1.2vmin;
+    line-height: 1.6;
+    white-space: pre;
+  }
+
+  /* Tables */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 1.2vmin;
+  }
+  th {
+    background: var(--hdr);
+    color: var(--accent);
+    padding: 0.5vmin 0.8vmin;
+    text-align: center;
+    font-weight: 700;
+    border: 1px solid var(--border);
+  }
+  td {
+    padding: 0.45vmin 0.8vmin;
+    border: 1px solid var(--border);
+    text-align: center;
+    color: var(--main);
+  }
+  tr:nth-child(odd)  td { background: var(--panel); }
+  tr:nth-child(even) td { background: var(--panel2); }
+  td:first-child { text-align: left; }
+
+  /* Slide-specific */
+  /* S1 — Capa */
+  #s1 .left-bar, #s1 .right-bar {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 2%;
+    background: var(--accent);
+  }
+  #s1 .left-bar  { left: 0; }
+  #s1 .right-bar { right: 0; }
+  #s1 .center-panel {
+    position: absolute;
+    top: 14%; left: 4%; right: 4%; bottom: 4%;
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1.2vmin;
+    padding: 2vmin;
+    text-align: center;
+  }
+  #s1 .main-title  { font-size: 4.5vmin; font-weight: 800; color: var(--accent); }
+  #s1 .sub-title   { font-size: 2.3vmin; color: var(--sec); font-style: italic; }
+  #s1 .divider     { width: 60%; height: 2px; background: var(--accent); }
+  #s1 .tag         { font-size: 1.8vmin; font-weight: 700; color: var(--gold); }
+  #s1 .discipline  { font-size: 1.6vmin; color: var(--main); }
+  #s1 .institution { font-size: 1.4vmin; color: var(--sec); }
+  #s1 .meta        { font-size: 1.25vmin; color: var(--sec); line-height: 1.8; }
+  #s1 .meta span   { color: var(--main); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<div id="stage">
+
+<!-- ===== SLIDE 1 — CAPA ===== -->
+<div class="slide active" id="s1">
+  <div class="left-bar"></div>
+  <div class="right-bar"></div>
+  <div class="center-panel">
+    <div class="main-title">Cobertura de Combinações</div>
+    <div class="sub-title">Minimum Set Cover</div>
+    <div class="divider"></div>
+    <div class="tag">Trabalho Avaliativo · RA03</div>
+    <div class="discipline">Complexidade de Algoritmos</div>
+    <div class="institution">Pontifícia Universidade Católica do Paraná — PUCPR</div>
+    <div class="institution">Bacharelado em Ciência da Computação</div>
+    <div class="meta">
+      Aluno: <span>Jafte Carneiro Fagundes da Silva</span><br>
+      Professor: <span>Edson Emilio Scalabrin</span><br>
+      Curitiba, 2026
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2 — MODELAGEM ===== -->
+<div class="slide" id="s2">
+  <div class="top-bar"></div>
+  <div class="slide-title">Modelagem do Problema</div>
+  <div class="slide-subtitle">Minimum Set Cover sobre combinações binárias</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:42%;bottom:6%;">
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>Universo e Conjuntos</h3>
+      <p class="ok bold" style="font-size:1.5vmin;margin-bottom:0.4vmin;">U = {1, 2, ..., 25}</p>
+      <p>S₁₅ = C(25,15) = <span class="accent">3.268.760</span> subconjuntos de tamanho 15</p>
+      <p>Sₚ = C(25,p) &nbsp;&nbsp; p ∈ {14, 13, 12, 11}</p>
+    </div>
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>Objetivo Formal</h3>
+      <p style="margin-bottom:0.4vmin;">Para cada p, encontrar <strong>SB₁₅,ₚ ⊆ S₁₅</strong> tal que:</p>
+      <p class="ok bold" style="font-size:1.4vmin;font-family:monospace;">∀ Y ∈ Sₚ, ∃ X ∈ SB₁₅,ₚ : Y ⊆ X</p>
+    </div>
+    <div class="panel panel2">
+      <h3>Classificação</h3>
+      <p class="warn bold">Instância de Minimum Set Cover — NP-difícil</p>
+      <p class="sec" style="margin-top:0.3vmin;">Nenhum algoritmo polinomial exato é conhecido (a menos que P=NP)</p>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:47%;right:3%;bottom:6%;">
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>Formulação ILP (Programação Linear Inteira)</h3>
+      <p class="sec" style="margin-bottom:0.5vmin;">LP = variáveis contínuas xᵢ ∈ [0,1] → relaxação convexa</p>
+      <p style="margin-bottom:0.5vmin;">ILP = variáveis binárias xᵢ ∈ {0,1} → exato, mas NP-difícil</p>
+      <div class="mono">xᵢ ∈ {0,1}   ∀ Xᵢ ∈ S₁₅
+
+minimizar:   Σ xᵢ
+
+sujeito a:   Σ_{i: Y⊆Xᵢ} xᵢ ≥ 1
+             ∀ Y ∈ Sₚ</div>
+    </div>
+    <div style="margin-top:0.5vmin;">
+      <h4 style="margin-bottom:0.5vmin;">Cardinalidades</h4>
+      <table>
+        <tr><th>Conjunto</th><th>Fórmula</th><th>Cardinalidade</th></tr>
+        <tr><td>S₁₅</td><td>C(25,15)</td><td>3.268.760</td></tr>
+        <tr><td>S₁₄</td><td>C(25,14)</td><td>4.457.400</td></tr>
+        <tr><td>S₁₃</td><td>C(25,13)</td><td>5.200.300</td></tr>
+        <tr><td>S₁₂</td><td>C(25,12)</td><td>5.200.300</td></tr>
+        <tr><td>S₁₁</td><td>C(25,11)</td><td>4.457.400</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 3 — ILP INVIÁVEL ===== -->
+<div class="slide" id="s3">
+  <div class="top-bar"></div>
+  <div class="slide-title">Por que ILP Direto é Inviável</div>
+  <div class="slide-subtitle">Escala proibitiva em todas as instâncias</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;">
+    <p style="margin-bottom:0.8vmin;">Modelo ILP sobre S₁₅ completo — dimensões por valor de p:</p>
+    <table style="margin-bottom:1.2vmin;">
+      <tr><th>p</th><th>Variáveis (|S₁₅|)</th><th>Restrições (|Sₚ|)</th><th>Coeficientes não-nulos</th><th>Viável?</th></tr>
+      <tr><td>14</td><td>3.268.760</td><td>4.457.400</td><td>49.031.400</td><td class="warn bold">Não</td></tr>
+      <tr><td>13</td><td>3.268.760</td><td>5.200.300</td><td>343.219.800</td><td class="warn bold">Não</td></tr>
+      <tr><td>12</td><td>3.268.760</td><td>5.200.300</td><td>1.487.285.800</td><td class="warn bold">Não</td></tr>
+      <tr><td>11</td><td>3.268.760</td><td>4.457.400</td><td>4.461.857.400</td><td class="warn bold">Não</td></tr>
+    </table>
+    <p class="sec" style="margin-bottom:1.2vmin;">Coeficientes não-nulos = C(25,p) × C(25−p, 15−p) &nbsp;|&nbsp; Exemplo p=11: 4.457.400 × 1.001 = 4,46 bilhões</p>
+
+    <div style="display:flex;gap:1.5vmin;">
+      <div class="panel" style="flex:1;">
+        <h3>LP — Relaxação Contínua</h3>
+        <ul>
+          <li>xᵢ ∈ [0,1] — programação linear</li>
+          <li>Solúvel em tempo polinomial (Simplex/IPM)</li>
+          <li class="ok">Fornece lower bound (LB-LP)</li>
+          <li class="warn">Não garante solução inteira válida</li>
+        </ul>
+      </div>
+      <div class="panel" style="flex:1;">
+        <h3>ILP — Programação Linear Inteira</h3>
+        <ul>
+          <li>xᵢ ∈ {0,1} — variáveis binárias</li>
+          <li class="ok">Exato: encontra SB mínimo global</li>
+          <li class="warn">NP-difícil: inviável em escala completa</li>
+          <li class="sec">Estratégia: ILP pós-greedy sobre candidatos reduzidos (solver disponível)</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 4 — LOWER BOUNDS ===== -->
+<div class="slide" id="s4">
+  <div class="top-bar"></div>
+  <div class="slide-title">Lower Bounds — Critério de Qualidade</div>
+  <div class="slide-subtitle">Limites inferiores para |SB₁₅,ₚ|</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:44%;bottom:6%;">
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>LB-LP (contagem direta)</h3>
+      <p>Cada X ∈ S₁₅ cobre exatamente C(15,p) subconjuntos de tamanho p.</p>
+      <p class="ok bold" style="margin:0.5vmin 0;font-size:1.4vmin;">|SB| ≥ ⌈ C(25,p) / C(15,p) ⌉</p>
+      <p class="sec">Mesmo limite que a relaxação LP fornece.</p>
+    </div>
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>Cota de Schönheim</h3>
+      <p>Limite combinatório derivado da teoria de covering codes.</p>
+      <p class="ok" style="margin-top:0.4vmin;">Sempre: <strong>LB-Sch ≥ LB-LP</strong></p>
+    </div>
+    <div class="panel panel2">
+      <h3>Garantia Teórica do Greedy</h3>
+      <p class="ok bold" style="font-size:1.4vmin;">|SB_greedy| ≤ H(|Sₚ|) × |OPT|</p>
+      <p style="margin-top:0.4vmin;">H(n) ≈ ln(n) + 0,577 &nbsp;→&nbsp; H(5.200.300) ≈ 15,4</p>
+      <p class="ok" style="margin-top:0.3vmin;">Na prática: gap de 1,79× a 3,78× (4–9× melhor que o pior caso teórico)</p>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:49%;right:3%;bottom:6%;">
+    <div style="margin-bottom:1vmin;">
+      <h4 style="margin-bottom:0.6vmin;">Limites inferiores por instância</h4>
+      <table>
+        <tr><th>p</th><th>C(15,p)</th><th>LB-LP</th><th>LB-Schönheim</th></tr>
+        <tr><td>14</td><td>15</td><td>297.160</td><td class="ok">297.172</td></tr>
+        <tr><td>13</td><td>105</td><td>49.527</td><td class="ok">58.887</td></tr>
+        <tr><td>12</td><td>455</td><td>11.430</td><td class="ok">13.175</td></tr>
+        <tr><td>11</td><td>1.365</td><td>3.266</td><td class="ok">3.370</td></tr>
+      </table>
+    </div>
+    <div class="panel" style="margin-bottom:1vmin;">
+      <h3>Interpretação prática</h3>
+      <p>Para p=14: o greedy precisaria de pelo menos <span class="accent bold">297.160</span> conjuntos.</p>
+      <p style="margin-top:0.4vmin;">A cota de Schönheim eleva para <span class="ok bold">297.172</span>.</p>
+      <p class="ok" style="margin-top:0.4vmin;">Qualquer solução com |SB| = 297.172 seria ótima.</p>
+    </div>
+    <div class="panel panel2">
+      <h3>Gap vs LB-Sch = |SB_greedy| / LB-Sch</h3>
+      <p class="gold">Mede o afastamento da solução greedy em relação ao melhor limite inferior conhecido.</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 5 — ESTRUTURAS DE DADOS ===== -->
+<div class="slide" id="s5">
+  <div class="top-bar"></div>
+  <div class="slide-title">Estruturas de Dados</div>
+  <div class="slide-subtitle">Representação eficiente de subconjuntos de U = {1..25}</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:44%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div class="panel">
+      <h3>Bitmask uint32</h3>
+      <p>Cada subconjunto de U → inteiro de 25 bits (uint32)</p>
+      <p style="margin-top:0.4vmin;">{1,3,5} → bit 0, bit 2, bit 4 → 0b10101 = 21</p>
+      <p class="gold bold" style="margin-top:0.5vmin;font-size:1.4vmin;">Teste Y ⊆ X em O(1): &nbsp; (X &amp; Y) == Y</p>
+    </div>
+    <div class="panel">
+      <h3>Índices e Arrays</h3>
+      <ul>
+        <li><span class="accent">s15_index</span>: bitmask → índice em S₁₅ &nbsp; O(1)</li>
+        <li><span class="accent">sp_index</span>: bitmask → índice em Sₚ &nbsp;&nbsp;&nbsp; O(1)</li>
+        <li><span class="accent">count[]</span>: int32[|S₁₅|] — cobertura atual de cada X</li>
+        <li><span class="accent">nao_coberto[]</span>: bool[|Sₚ|] — alvos pendentes</li>
+        <li>Arrays NumPy uint32 — operações vetorizadas</li>
+      </ul>
+    </div>
+    <div class="panel panel2">
+      <h3>Seleção de estratégia (argmax de count[])</h3>
+      <ul>
+        <li>p=14, p=13 → <span class="main">Heap lazy</span> (poucas atualizações/iter)</li>
+        <li>p=12 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="accent">np.argmax</span> (volume médio)</li>
+        <li>p=11 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="ok">Atualização paralela de count[]</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:49%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div>
+      <h4 style="margin-bottom:0.5vmin;">Heap Lazy (max-heap com entradas obsoletas)</h4>
+      <div class="mono">heap = [(-count_inicial, i) for i in range(N)]
+heapify(heap)
+
+# Extrai o máximo válido:
+while True:
+    neg_cnt, i = heappop(heap)
+    if count[i] == -neg_cnt: break  # válido</div>
+    </div>
+    <div>
+      <h4 style="margin-bottom:0.5vmin;">np.argmax vs Heap Lazy — decisão automática</h4>
+      <table>
+        <tr><th>p</th><th>Updates/iter</th><th>Estratégia</th></tr>
+        <tr><td>14</td><td>165</td><td>Heap lazy</td></tr>
+        <tr><td>13</td><td>6.930</td><td>Heap lazy</td></tr>
+        <tr><td>12</td><td>130.130</td><td class="accent">np.argmax</td></tr>
+        <tr><td>11</td><td>1.366.365</td><td class="ok">Paralelo (Pool)</td></tr>
+      </table>
+    </div>
+    <div class="panel panel2">
+      <p class="sec">Limiar empírico: &gt; 10.000 updates/iter → argmax; &gt;&gt; 1M → paralelo</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 6 — ALGORITMO GREEDY ===== -->
+<div class="slide" id="s6">
+  <div class="top-bar"></div>
+  <div class="slide-title">Algoritmo Greedy para Set Cover</div>
+  <div class="slide-subtitle">Aproximação gulosa com garantia teórica logarítmica</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:44%;bottom:6%;">
+    <h4 style="margin-bottom:0.5vmin;">Pseudocódigo</h4>
+    <div class="mono" style="font-size:1.1vmin;">Entrada: S₁₅, Sₚ
+Pré-proc: construir s15_index, sp_index,
+          count[], nao_coberto[]
+SB ← ∅
+
+enquanto existir alvo não coberto:
+    X* ← argmax count[X]   // máximo atual
+    SB ← SB ∪ {X*};  count[X*] ← −1
+
+    para cada Y ⊆ X*, |Y| = p:
+        se Y não coberto:
+            marcar Y como coberto
+            para cada X ∋ Y:
+                count[X] ← count[X] − 1
+
+retornar SB</div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:49%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div class="panel">
+      <h3>Garantia de Aproximação</h3>
+      <p class="ok bold" style="font-size:1.5vmin;">|SB_greedy| ≤ H(|Sₚ|) × |OPT|</p>
+      <p style="margin-top:0.5vmin;">H(n) = ln(n) + γ, &nbsp; γ ≈ 0,577 (constante de Euler)</p>
+      <p style="margin-top:0.4vmin;">H(5.200.300) ≈ 15,4</p>
+      <p class="gold" style="margin-top:0.4vmin;">→ greedy garante solução ≤ 15,4× o ótimo global</p>
+      <p class="ok" style="margin-top:0.3vmin;">→ na prática: 1,79× a 3,78× (muito melhor)</p>
+    </div>
+    <div class="panel">
+      <h3>Complexidade de Tempo</h3>
+      <p class="bold" style="font-family:monospace;font-size:1.3vmin;">Θ( K × C(k,p) × C(n−p, k−p) × log N₁₅ )</p>
+      <p class="sec" style="margin-top:0.4vmin;">K = |SB|, &nbsp; gargalo = atualização de count[]</p>
+    </div>
+    <div class="panel">
+      <h3>Complexidade de Espaço</h3>
+      <p style="font-family:monospace;">O(N₁₅ + Nₚ) → O(C(25,15) + C(25,p))</p>
+    </div>
+    <div class="panel panel2">
+      <p class="warn bold">O greedy não garante solução ótima global</p>
+      <p class="sec" style="margin-top:0.3vmin;">Encontra solução aproximada de qualidade mensurada pelo gap vs LB</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 7 — COMPLEXIDADE ===== -->
+<div class="slide" id="s7">
+  <div class="top-bar"></div>
+  <div class="slide-title">Análise de Complexidade</div>
+  <div class="slide-subtitle">Por instância — Notações Θ, O, Ω</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <p class="sec">N₁₅ = C(25,15) = 3.268.760 | Nₚ = C(25,p) | K = |SB_greedy| | A = C(15,p) × C(25−p,15−p)</p>
+    <table>
+      <tr><th>p</th><th>C(15,p)</th><th>C(25−p,15−p)</th><th>A = updates/iter</th><th>K obtido</th><th>Estratégia</th><th>Tempo obs.</th></tr>
+      <tr><td>14</td><td>15</td><td>11</td><td>165</td><td class="warn">532.555</td><td>Heap lazy</td><td>~18 min</td></tr>
+      <tr><td>13</td><td>105</td><td>66</td><td>6.930</td><td class="warn">128.827</td><td>Heap lazy</td><td>~3 h</td></tr>
+      <tr><td>12</td><td>455</td><td>286</td><td>130.130</td><td class="accent">38.100</td><td class="accent">np.argmax</td><td>~79 min</td></tr>
+      <tr><td>11</td><td>1.365</td><td>1.001</td><td class="gold">1.366.365</td><td class="ok">12.733</td><td class="ok">Paralelo</td><td>~3,4 h</td></tr>
+    </table>
+
+    <div style="display:flex;gap:1.5vmin;">
+      <div class="panel" style="flex:1;">
+        <h3>Programa 1 — Geração</h3>
+        <ul>
+          <li>Θ(C(n,p)) por conjunto — itertools.combinations</li>
+          <li>Espaço: O(C(n,p)) — array uint32 completo</li>
+          <li class="ok">Sequencial: ~80s | Paralelo: ~18,7s | Speedup: ~4,3×</li>
+        </ul>
+      </div>
+      <div class="panel" style="flex:1;">
+        <h3>Programas 2–5 — Greedy Set Cover</h3>
+        <ul>
+          <li class="warn bold">Gargalo: atualização de count[] (A updates/iter)</li>
+          <li>Pré-proc: O(N₁₅ + Nₚ) — construção dos índices hash</li>
+          <li>Θ(K × A × log N₁₅) com heap &nbsp;|&nbsp; Θ(K × (A + N₁₅)) com argmax</li>
+          <li>Espaço: O(N₁₅ + Nₚ) ≈ O(8,5M) uint32 ≈ 34 MB/instância</li>
+        </ul>
+      </div>
+    </div>
+    <div class="panel panel2">
+      <h3 style="color:var(--gold)">Comparação Ω, Θ, O</h3>
+      <p><strong class="ok">Ω</strong>: melhor caso — SB cobre tudo logo no início (improvável) &nbsp;|&nbsp; <strong class="accent">Θ</strong>: caso médio com distribuição uniforme de Sₚ &nbsp;|&nbsp; <strong class="warn">O</strong>: pior caso — greedy precisa de |Sₚ| iterações</p>
+      <p class="ok" style="margin-top:0.3vmin;">Na prática: K &lt;&lt; |Sₚ| &nbsp;|&nbsp; Para p=11: K=12.733 vs Nₚ=4.457.400 (0,3% do pior caso)</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 8 — PARALELISMO ===== -->
+<div class="slide" id="s8">
+  <div class="top-bar"></div>
+  <div class="slide-title">Gargalos Computacionais e Paralelismo</div>
+  <div class="slide-subtitle">Onde o tempo é gasto e onde o paralelismo compensa</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:44%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div class="panel">
+      <h3 class="ok" style="color:var(--ok)">Programa 1 — Geração Paralela ✓</h3>
+      <ul>
+        <li>5 conjuntos (S₁₁..S₁₅) são independentes entre si</li>
+        <li>multiprocessing.Pool.map → 5 workers simultâneos</li>
+        <li>Sequencial: ~80s &nbsp;|&nbsp; Paralelo: ~18,7s</li>
+        <li class="ok bold">Speedup observado: ~4,3×</li>
+        <li class="sec">Overhead Windows (spawn): mais lento que Linux (fork)</li>
+      </ul>
+    </div>
+    <div class="panel">
+      <h3 class="ok" style="color:var(--ok)">Programa 5 (p=11) — Atualização Paralela ✓</h3>
+      <ul>
+        <li>1.366.365 updates/iter → volume justifica overhead IPC</li>
+        <li>Estratégia: Pool criado uma vez antes do loop</li>
+        <li>Workers decrementam count[] em batches de Y's</li>
+        <li class="sec">Argmax permanece sequencial (depende do count[] completo)</li>
+      </ul>
+    </div>
+    <div class="panel panel2">
+      <p class="gold">Critério: paralelizar quando updates/iter &gt;&gt; custo de IPC (~10k–100k threshold)</p>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:49%;right:3%;bottom:6%;">
+    <div class="panel" style="margin-bottom:0;">
+      <h3 class="warn" style="color:var(--warn)">Por que p=14, 13, 12 não foram paralelizados?</h3>
+      <br>
+      <p class="bold">p=14 → 165 updates/iter</p>
+      <ul style="margin-bottom:0.8vmin;">
+        <li class="sec">IPC overhead >> trabalho útil por iteração</li>
+        <li class="sec">Heap lazy já é eficiente: log(3,27M) ≈ 22 ops/extração</li>
+      </ul>
+      <p class="bold">p=13 → 6.930 updates/iter</p>
+      <ul style="margin-bottom:0.8vmin;">
+        <li class="sec">Volume ainda pequeno vs. custo de serialização IPC</li>
+        <li class="sec">Heap lazy ainda compensa</li>
+      </ul>
+      <p class="bold">p=12 → 130.130 updates/iter</p>
+      <ul style="margin-bottom:0.8vmin;">
+        <li class="sec">np.argmax vetorizado: O(N₁₅) ≈ 3,27M operações NumPy/iter</li>
+        <li class="sec">Borderline: NumPy puro + overhead IPC = empate ou ganho marginal</li>
+      </ul>
+      <p class="ok bold">p=11 → 1.366.365 updates/iter ✓ paralelo</p>
+      <ul>
+        <li class="sec">Volume suficiente para amortizar overhead de IPC</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 9 — RESULTADOS ===== -->
+<div class="slide" id="s9">
+  <div class="top-bar"></div>
+  <div class="slide-title">Resultados Principais &nbsp;(n=25, k=15)</div>
+  <div class="slide-subtitle">Greedy Set Cover — soluções obtidas vs lower bounds</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <table>
+      <tr><th>p</th><th>|Sₚ|</th><th>LB-LP</th><th>LB-Sch</th><th>|SB_greedy|</th><th>Gap vs LB-Sch</th><th>Tempo</th><th>% de S₁₅</th></tr>
+      <tr><td>14</td><td>4.457.400</td><td>297.160</td><td>297.172</td><td class="warn bold">532.555</td><td class="gold">1,79×</td><td>~18 min</td><td>16,3%</td></tr>
+      <tr><td>13</td><td>5.200.300</td><td>49.527</td><td>58.887</td><td class="warn bold">128.827</td><td class="gold">2,19×</td><td>~3 h</td><td>3,9%</td></tr>
+      <tr><td>12</td><td>5.200.300</td><td>11.430</td><td>13.175</td><td class="accent bold">38.100</td><td class="gold">2,89×</td><td>~79 min</td><td>1,2%</td></tr>
+      <tr><td>11</td><td>4.457.400</td><td>3.266</td><td>3.370</td><td class="ok bold">12.733</td><td class="gold">3,78×</td><td>~3,4 h</td><td>0,4%</td></tr>
+    </table>
+
+    <div class="panel">
+      <h3>Interpretação dos Resultados</h3>
+      <p>Garantia teórica: gap ≤ H(5.200.300) ≈ <span class="warn bold">15,4×</span> &nbsp;—&nbsp; gap real: <span class="ok bold">1,79× a 3,78×</span></p>
+      <p style="margin-top:0.4vmin;" class="ok bold">Greedy ficou 4× a 9× melhor que o pior caso teórico garantido</p>
+      <p style="margin-top:0.4vmin;">p=14 usa 16,3% de S₁₅ para cobrir 100% de S₁₄ &nbsp;—&nbsp; p=11 usa apenas 0,4%</p>
+    </div>
+
+    <div class="panel panel2">
+      <h3>Auditoria de Cobertura Exata &nbsp;<span class="sec" style="font-weight:400;font-size:1.2vmin;">(audit_cobertura.py)</span></h3>
+      <p class="ok">p=11: APROVADO — 100% de S₁₁ coberto (verificação exata)</p>
+      <p class="ok">p=12: APROVADO — 100% de S₁₂ coberto (verificação exata)</p>
+      <p class="ok">p=13: APROVADO — 100% de S₁₃ coberto (669,9B ops em ~80 min)</p>
+      <p class="warn">p=14: auditoria exata em andamento (2.373,8B ops · ETA ~3,5 h)</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 10 — ABORDAGENS ===== -->
+<div class="slide" id="s10">
+  <div class="top-bar"></div>
+  <div class="slide-title">Eixo Comparativo das Abordagens</div>
+  <div class="slide-subtitle">Discussão das alternativas indicadas no enunciado</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;">
+    <table>
+      <tr><th>Abordagem</th><th>Garantia</th><th>Escala n=25</th><th>Status</th></tr>
+      <tr><td>Greedy clássico</td><td>H(Nₚ)×OPT ≈ 15,4×</td><td class="ok">Implementado e executado</td><td class="ok bold">Principal ✓</td></tr>
+      <tr><td>Stochastic Greedy</td><td>Sem garantia formal</td><td class="ok">13,5–20,6× mais rápido</td><td class="ok bold">Experimental ✓</td></tr>
+      <tr><td>GRASP</td><td>Sem garantia formal</td><td>~5× mais lento que greedy</td><td class="ok">Experimental ✓</td></tr>
+      <tr><td>Algoritmos Aleatórios</td><td>Esperança ≤ H(Nₚ)×OPT</td><td>Viável</td><td class="sec">Alternativa futura</td></tr>
+      <tr><td>ILP (global)</td><td>Ótimo exato</td><td class="warn">Inviável em n=25 completo</td><td class="warn bold">Inviável ✗</td></tr>
+      <tr><td>ILP pós-greedy</td><td>Ótimo sobre candidatos</td><td>Viável (refinamento)</td><td class="sec">Solver disponível</td></tr>
+      <tr><td>Branch and Bound / B&amp;P</td><td>Ótimo (potencial)</td><td>Depende de heurísticas</td><td class="sec">Melhoria futura</td></tr>
+      <tr><td>Relaxação Lagrangiana</td><td>Lower bound + solução</td><td class="ok">Implementado (medium)</td><td class="ok">Experimental ✓</td></tr>
+      <tr><td>Column Generation</td><td>LP exact + rounding</td><td class="ok">Implementado (medium)</td><td class="ok">Experimental ✓</td></tr>
+      <tr><td>Computação Paralela</td><td>Speedup × p</td><td class="ok">Prog.1: 4,3×; Prog.5 (p=11): ✓</td><td class="ok">Implementado ✓</td></tr>
+      <tr><td>Metaheurísticas (SA, GA)</td><td>Sem garantia formal</td><td>Viável</td><td class="sec">Melhoria futura</td></tr>
+    </table>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 11 — EXPERIMENTOS ===== -->
+<div class="slide" id="s11">
+  <div class="top-bar"></div>
+  <div class="slide-title">Experimentos Alternativos — Ganhos Medidos</div>
+  <div class="slide-subtitle">Benchmarks em escala reduzida para comparação de estratégias</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div>
+      <h4 style="margin-bottom:0.5vmin;">Instância medium &nbsp;<span class="sec" style="font-weight:400;">(n=15, k=9, p=6)</span></h4>
+      <table>
+        <tr><th>Método</th><th>Tempo</th><th>|SB|</th><th>Observação</th></tr>
+        <tr><td>Greedy baseline</td><td>10,035 s</td><td>140</td><td>Referência determinística</td></tr>
+        <tr><td>Stochastic Greedy</td><td class="ok">0,743 s</td><td>152</td><td class="ok">13,5× mais rápido · +8,6% em |SB|</td></tr>
+        <tr><td>GRASP</td><td>48,813 s</td><td class="ok">143</td><td>5× mais caro; qualidade próxima do greedy</td></tr>
+        <tr><td>Relaxação Lagrangiana</td><td>23,948 s</td><td>140</td><td>Bound LP: 59,58; reparo igual ao greedy</td></tr>
+        <tr><td>Column Generation</td><td>18,551 s</td><td>171</td><td>Relaxação LP + pricing; solução arredondada</td></tr>
+      </table>
+    </div>
+    <div>
+      <h4 style="margin-bottom:0.5vmin;">Instância large-demo &nbsp;<span class="sec" style="font-weight:400;">(n=16, k=10, p=6)</span></h4>
+      <table>
+        <tr><th>Método</th><th>Tempo</th><th>|SB|</th><th>Observação</th></tr>
+        <tr><td>Greedy baseline</td><td>24,895 s</td><td>105</td><td>Referência para escala maior</td></tr>
+        <tr><td>Stochastic Greedy</td><td class="ok">1,208 s</td><td>115</td><td class="ok">20,6× mais rápido · +9,5% em |SB|</td></tr>
+        <tr><td>GRASP</td><td>143,862 s</td><td class="ok">107</td><td>5,8× mais lento; melhora marginal em |SB|</td></tr>
+        <tr><td>Greedy + poda local</td><td>28,268 s</td><td>105</td><td>Removeu 0 candidatos redundantes</td></tr>
+      </table>
+    </div>
+    <div class="panel">
+      <h3>Conclusão dos Experimentos</h3>
+      <p class="ok bold">Stochastic Greedy: maior ganho prático — 13,5–20,6× mais rápido com ≤ 10% de aumento em |SB|</p>
+      <p style="margin-top:0.3vmin;">GRASP valida metaheurísticas, mas não compensou o custo adicional nesta escala</p>
+      <p style="margin-top:0.3vmin;">Lagrangiana e Column Generation: abordagens científicas para bounds e relaxação de LP</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 12 — LIMITAÇÕES ===== -->
+<div class="slide" id="s12">
+  <div class="top-bar"></div>
+  <div class="slide-title">Limitações e Possíveis Melhorias</div>
+  <div class="slide-subtitle">Análise crítica da solução implementada</div>
+
+  <div style="position:absolute;top:12%;left:3%;width:46%;bottom:6%;">
+    <div class="panel" style="height:100%;">
+      <h3 style="color:var(--warn)">Limitações</h3>
+      <br>
+      <ul>
+        <li class="warn bold">ILP direto inviável em escala completa (n=25)</li>
+        <li class="sec">→ 4,46 bilhões de coeficientes para p=11</li>
+        <br>
+        <li class="warn bold">Greedy não garante solução ótima global</li>
+        <li class="sec">→ gap real de 1,79× a 3,78× vs LB-Sch</li>
+        <br>
+        <li class="warn bold">Auditoria exata p=14 é cara: ~2.373 B operações</li>
+        <li class="sec">→ ~3,5h de verificação NumPy sequencial</li>
+        <br>
+        <li class="warn bold">Escalabilidade limitada para n > 27</li>
+        <li class="sec">→ C(27,15) ≈ 21M; memória e tempo explodem</li>
+        <br>
+        <li class="warn bold">Tempo alto para p=13 (~3h) e p=11 (~3,4h)</li>
+        <li class="sec">→ gargalo: atualização de count[] (A updates/iter)</li>
+        <br>
+        <li class="warn bold">ILP pós-greedy disponível, mas não executado em escala</li>
+        <li class="sec">→ seria refinamento, não resultado principal</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="position:absolute;top:12%;left:51%;right:3%;bottom:6%;">
+    <div class="panel panel2" style="height:100%;">
+      <h3 style="color:var(--ok)">Melhorias Futuras</h3>
+      <br>
+      <p class="accent bold">Algoritmos Exatos sobre Espaço Reduzido</p>
+      <ul style="margin-bottom:1vmin;">
+        <li>ILP pós-greedy (candidatos do greedy como universo)</li>
+        <li>Branch and Bound / Branch-and-Price</li>
+        <li>Column Generation completo (B&amp;P integrado)</li>
+      </ul>
+      <p class="accent bold">Heurísticas Avançadas</p>
+      <ul style="margin-bottom:1vmin;">
+        <li>Relaxação Lagrangiana para lower bounds mais apertados</li>
+        <li>Simulated Annealing pós-greedy</li>
+        <li>GRASP paralelo com mais restarts e busca local</li>
+      </ul>
+      <p class="accent bold">Implementação de Alto Desempenho</p>
+      <ul style="margin-bottom:1vmin;">
+        <li>Bitsets vetorizados (AVX2/AVX-512)</li>
+        <li>Cython ou C/C++ para gargalos Python</li>
+        <li>Distribuição em múltiplos processos/máquinas (MPI)</li>
+      </ul>
+      <p class="accent bold">Auditoria Acelerada</p>
+      <ul>
+        <li>Paralelizar audit_cobertura.py com batches de SB</li>
+        <li>GPU (CuPy) para verificação de cobertura massiva</li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+<!-- ===== SLIDE 13 — CONCLUSÃO ===== -->
+<div class="slide" id="s13">
+  <div class="top-bar"></div>
+  <div class="slide-title">Conclusão Técnica</div>
+  <div class="slide-subtitle">Síntese dos resultados e contribuições do trabalho</div>
+
+  <div style="position:absolute;top:12%;left:3%;right:3%;bottom:6%;display:flex;flex-direction:column;gap:1vmin;">
+    <div>
+      <p style="margin-bottom:0.6vmin;"><span class="accent bold">O Problema:</span> Minimum Set Cover sobre U={1..25} — NP-difícil, instâncias com até 5,2M elementos em Sₚ</p>
+      <table>
+        <tr><th>Dimensão</th><th>Contribuição do Trabalho</th></tr>
+        <tr><td class="accent bold">Modelagem</td><td>Formulação formal + ILP + lower bounds LP e Schönheim</td></tr>
+        <tr><td class="accent bold">Algoritmo</td><td>Greedy com heap lazy / np.argmax / atualização paralela (p=11)</td></tr>
+        <tr><td class="accent bold">Estruturas</td><td>Bitmask uint32 + índices hash + count[] + nao_coberto[] — acesso O(1)</td></tr>
+        <tr><td class="accent bold">Resultados</td><td>4 instâncias resolvidas; gap 1,79×–3,78× vs LB-Sch (teórico: ≤ 15,4×)</td></tr>
+        <tr><td class="accent bold">Paralelismo</td><td>Prog.1: 4,3× speedup; Prog.5 (p=11): atualização paralela de count[]</td></tr>
+        <tr><td class="accent bold">Experimentos</td><td>Stochastic Greedy, GRASP, Lagrangiana, Column Generation em benchmarks</td></tr>
+        <tr><td class="accent bold">Auditoria</td><td>p=11, 12, 13 APROVADO — 100% confirmado; p=14 em andamento</td></tr>
+      </table>
+    </div>
+
+    <div class="panel" style="flex:1;">
+      <h3>Mensagem Final</h3>
+      <p style="margin-top:0.5vmin;">O greedy aproximativo, com estruturas de dados eficientes e paralelismo seletivo, produziu soluções de alta qualidade (gap <span class="ok bold">1,79×–3,78×</span>) em tempo razoável para um problema NP-difícil de escala industrial.</p>
+      <p class="ok bold" style="margin-top:0.8vmin;">Stochastic Greedy emergiu como alternativa prática de alto desempenho: 13–20× mais rápido com custo inferior a 10% de qualidade.</p>
+    </div>
+
+    <div class="panel panel2" style="text-align:center;padding:1vmin;">
+      <p class="gold bold" style="font-size:1.6vmin;">Trabalho Avaliativo RA03 — Complexidade de Algoritmos — PUCPR 2026</p>
+      <p class="sec">Jafte Carneiro Fagundes da Silva</p>
+    </div>
+  </div>
+  <div class="footer">PUCPR · Complexidade de Algoritmos · RA03 · 2026</div>
+</div>
+
+</div><!-- #stage -->
+
+<div id="nav">
+  <button id="btnPrev" onclick="go(-1)" disabled>&#8592; Anterior</button>
+  <span id="counter">Slide 1 de 13</span>
+  <button id="btnNext" onclick="go(1)">Próximo &#8594;</button>
+</div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total  = slides.length;
+  let cur = 0;
+
+  function go(delta) {
+    slides[cur].classList.remove('active');
+    cur = Math.max(0, Math.min(total - 1, cur + delta));
+    slides[cur].classList.add('active');
+    document.getElementById('counter').textContent = `Slide ${cur+1} de ${total}`;
+    document.getElementById('btnPrev').disabled = cur === 0;
+    document.getElementById('btnNext').disabled = cur === total - 1;
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') go(1);
+    if (e.key === 'ArrowLeft'  || e.key === 'ArrowUp')                     go(-1);
+  });
+</script>
+</body>
+</html>

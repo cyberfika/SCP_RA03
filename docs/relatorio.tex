@@ -571,6 +571,13 @@ $p$ & $|\OPT| \geq$ (LB-LP) & $|\OPT| \geq$ (LB-Sch) & $|\SB_{\text{greedy}}|$ &
 
 \end{table}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{report_final_sb_vs_lower_bound.png}
+\caption{Comparação entre o tamanho da solução obtida pelo Greedy e o lower bound de Schönheim. A escala logarítmica permite comparar os quatro valores de $p$ no mesmo gráfico.}
+\label{fig:report-final-sb-vs-lb}
+\end{figure}
+
 \subsection{Interpretação do arquivo de resultado}
 
 Os resultados são armazenados em arquivos \texttt{.npy} (formato NumPy binário)
@@ -637,6 +644,13 @@ greedy é no máximo $1{,}79\times$ o ótimo.
         de 512 $\times$ 10.000, concluindo em $\approx 45$s.
 \end{enumerate}
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.88\textwidth]{report_updates_per_iteration.png}
+\caption{Número de atualizações de \texttt{count[]} por iteração do Greedy. O caso $p=11$ domina o custo por iteração, justificando a versão paralela do Programa~5.}
+\label{fig:report-updates-per-iteration}
+\end{figure}
+
 \subsection{Escalabilidade}
 
 \begin{table}[H]
@@ -686,6 +700,13 @@ demais. Um \texttt{Pool} com 5 workers gera os 5 arrays simultaneamente,
 reduzindo o tempo total observado de $\approx 80$s para $\approx 18{,}7$s
 (speedup real próximo de $4{,}3\times$ na execução local).
 
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.72\textwidth]{report_parallel_speedup.png}
+\caption{Ganho observado com a versão paralela do Programa~1. A geração dos conjuntos é naturalmente paralelizável porque cada $\mathcal{S}_p$ pode ser produzido independentemente.}
+\label{fig:report-parallel-speedup}
+\end{figure}
+
 \textbf{Programas~2 ($p=14$), 3 ($p=13$) e~4 ($p=12$).}
 Nestes três casos, a paralelização do laço interno de atualização de
 \texttt{count[]} é inviável porque o volume de trabalho paralelizável por
@@ -722,8 +743,10 @@ antes do laço greedy e reutilizado em todas as $12.733$ iterações, eliminando
 o custo de inicialização recorrente. O speedup prático esperado é $\approx 3\times$
 (de $\approx 3{,}4$h para $\approx 1{,}1$h em 4 núcleos).
 
-
-% ---------------------------------------------------------------------------
+
+
+% ---------------------------------------------------------------------------
+
 \section{Comparação entre Estratégias}
 % ---------------------------------------------------------------------------
 
@@ -916,6 +939,20 @@ large-demo $(n=16,k=10,p=6)$ & Greedy + poda local & $28{,}268$s & 105 & Removeu
 }
 \label{tab:experimentos-alternativos}
 \end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{report_experiment_runtime_log.png}
+\caption{Tempo de execução das abordagens experimentais em escala logarítmica. O Stochastic Greedy foi a alternativa mais rápida nas duas instâncias reduzidas avaliadas.}
+\label{fig:report-experiment-runtime}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.92\textwidth]{report_experiment_tradeoff.png}
+\caption{Trade-off entre tempo de execução e tamanho da solução. Pontos mais à esquerda são mais rápidos; pontos mais baixos produzem soluções menores.}
+\label{fig:report-experiment-tradeoff}
+\end{figure}
 
 Os experimentos mostram que o \emph{Stochastic Greedy} foi a alternativa com
 maior ganho de desempenho medido: reduziu o tempo em $13{,}5\times$ na instância

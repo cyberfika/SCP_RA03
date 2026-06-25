@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """
-Generate polished chart assets for the RA03 presentation.
+Generate white-background chart assets for docs/relatorio.tex.
 
-The charts are intentionally generated outside the PPTX so they can be reviewed
-and inserted later without changing the current presentation layout.
+These charts are designed for a printed/PDF report, not for the dark slide deck.
+They avoid large internal titles because the LaTeX captions provide the context.
 """
 
 from __future__ import annotations
@@ -17,20 +17,18 @@ import numpy as np
 
 
 OUTPUT_DIR = Path(__file__).resolve().parent
-TITLE_MAP_PATH = OUTPUT_DIR / "chart_titles.md"
 
-BG = "#020617"
-PANEL = "#0f172a"
-TEXT = "#e2e8f0"
-MUTED = "#94a3b8"
-GRID = "#334155"
-CYAN = "#38bdf8"
-GREEN = "#34d399"
-AMBER = "#f59e0b"
-PURPLE = "#a78bfa"
-PINK = "#f472b6"
+BG = "#ffffff"
+TEXT = "#111827"
+MUTED = "#4b5563"
+GRID = "#d1d5db"
+CYAN = "#0284c7"
+GREEN = "#059669"
+AMBER = "#d97706"
+PURPLE = "#7c3aed"
+PINK = "#db2777"
 SLATE = "#64748b"
-RED = "#f87171"
+RED = "#dc2626"
 
 METHOD_COLORS = {
     "Greedy baseline": CYAN,
@@ -63,10 +61,10 @@ EXPERIMENTS = [
 ]
 
 FINAL_RESULTS = [
-    {"p": "14", "lb_sch": 297_172, "sb": 532_555, "time_minutes": 18.0, "updates": 165},
-    {"p": "13", "lb_sch": 58_887, "sb": 128_827, "time_minutes": 180.0, "updates": 6_930},
-    {"p": "12", "lb_sch": 13_175, "sb": 38_100, "time_minutes": 79.0, "updates": 130_130},
-    {"p": "11", "lb_sch": 3_370, "sb": 12_733, "time_minutes": 204.0, "updates": 1_366_365},
+    {"p": "14", "lb_sch": 297_172, "sb": 532_555, "updates": 165},
+    {"p": "13", "lb_sch": 58_887, "sb": 128_827, "updates": 6_930},
+    {"p": "12", "lb_sch": 13_175, "sb": 38_100, "updates": 130_130},
+    {"p": "11", "lb_sch": 3_370, "sb": 12_733, "updates": 1_366_365},
 ]
 
 
@@ -76,14 +74,12 @@ def configure_matplotlib() -> None:
             "figure.facecolor": BG,
             "axes.facecolor": BG,
             "savefig.facecolor": BG,
-            "font.family": ["DejaVu Sans", "Segoe UI", "Arial", "sans-serif"],
+            "font.family": ["DejaVu Sans", "Arial", "sans-serif"],
             "text.color": TEXT,
-            "axes.labelcolor": MUTED,
+            "axes.labelcolor": TEXT,
             "axes.edgecolor": GRID,
             "xtick.color": MUTED,
             "ytick.color": MUTED,
-            "axes.titleweight": "bold",
-            "axes.titlepad": 16,
             "figure.dpi": 160,
             "savefig.dpi": 300,
         }
@@ -97,9 +93,9 @@ def style_axes(ax: plt.Axes, *, xgrid: bool = True, ygrid: bool = False) -> None
     ax.spines["bottom"].set_color(GRID)
     ax.tick_params(axis="both", length=0, pad=8)
     if xgrid:
-        ax.grid(axis="x", color=GRID, alpha=0.35, linewidth=0.8)
+        ax.grid(axis="x", color=GRID, alpha=0.75, linewidth=0.8)
     if ygrid:
-        ax.grid(axis="y", color=GRID, alpha=0.35, linewidth=0.8)
+        ax.grid(axis="y", color=GRID, alpha=0.75, linewidth=0.8)
     ax.set_axisbelow(True)
 
 
@@ -109,7 +105,7 @@ def format_seconds(value: float) -> str:
 
 def save(fig: plt.Figure, filename: str) -> None:
     path = OUTPUT_DIR / filename
-    fig.savefig(path, bbox_inches="tight", pad_inches=0.28)
+    fig.savefig(path, bbox_inches="tight", pad_inches=0.18)
     plt.close(fig)
     print(path)
 
@@ -120,7 +116,7 @@ def chart_experiment_runtime_log() -> None:
     values = [row.seconds for row in rows]
     colors = [METHOD_COLORS[row.method] for row in rows]
 
-    fig, ax = plt.subplots(figsize=(13.6, 7.65))
+    fig, ax = plt.subplots(figsize=(10.8, 6.0))
     y = np.arange(len(rows))
     ax.barh(y, values, color=colors, height=0.56, alpha=0.95)
     ax.set_xscale("log")
@@ -132,63 +128,61 @@ def chart_experiment_runtime_log() -> None:
     ax.set_xlim(0.45, 220)
 
     for idx, value in enumerate(values):
-        ax.text(value * 1.08, idx, format_seconds(value), va="center", ha="left", color=TEXT, fontsize=11)
+        ax.text(value * 1.08, idx, format_seconds(value), va="center", ha="left", color=TEXT, fontsize=9.5)
 
-    save(fig, "chart_experiment_runtime_log.png")
+    save(fig, "report_experiment_runtime_log.png")
 
 
 def chart_experiment_tradeoff() -> None:
-    fig, ax = plt.subplots(figsize=(13.6, 7.65))
+    fig, ax = plt.subplots(figsize=(10.8, 6.0))
     markers = {"medium": "o", "large-demo": "s"}
     label_offsets = {
-        ("medium", "Greedy baseline"): (8, 8),
-        ("medium", "Stochastic Greedy"): (8, 8),
-        ("medium", "GRASP"): (8, 8),
-        ("medium", "Relaxação Lagrangiana"): (8, 8),
-        ("medium", "Column Generation"): (8, 8),
-        ("large-demo", "Greedy baseline"): (8, 14),
-        ("large-demo", "Stochastic Greedy"): (8, 10),
-        ("large-demo", "GRASP"): (8, -2),
-        ("large-demo", "Greedy + poda local"): (8, -16),
+        ("medium", "Greedy baseline"): (7, 7),
+        ("medium", "Stochastic Greedy"): (7, 7),
+        ("medium", "GRASP"): (7, 7),
+        ("medium", "Relaxação Lagrangiana"): (7, 7),
+        ("medium", "Column Generation"): (7, 7),
+        ("large-demo", "Greedy baseline"): (7, 12),
+        ("large-demo", "Stochastic Greedy"): (7, 8),
+        ("large-demo", "GRASP"): (7, -2),
+        ("large-demo", "Greedy + poda local"): (7, -14),
     }
 
     for row in EXPERIMENTS:
         ax.scatter(
             row.seconds,
             row.selected_count,
-            s=210,
+            s=135,
             marker=markers[row.instance],
             color=METHOD_COLORS[row.method],
-            edgecolors=BG,
-            linewidths=1.8,
+            edgecolors="white",
+            linewidths=1.4,
             zorder=3,
         )
         label = row.method.replace("Greedy baseline", "Greedy").replace("Relaxação Lagrangiana", "Lagrangiana")
-        offset = label_offsets.get((row.instance, row.method), (8, 7))
         ax.annotate(
             label,
             (row.seconds, row.selected_count),
-            xytext=offset,
+            xytext=label_offsets.get((row.instance, row.method), (7, 7)),
             textcoords="offset points",
             color=TEXT,
-            fontsize=10,
+            fontsize=8.8,
             zorder=4,
         )
 
     ax.set_xscale("log")
     ax.set_xlabel("Tempo em segundos (escala log)")
-    ax.set_ylabel("|SB| - tamanho da solução")
+    ax.set_ylabel(r"$|SB|$ - tamanho da solução")
     style_axes(ax, xgrid=True, ygrid=True)
     ax.xaxis.set_major_formatter(mticker.FuncFormatter(lambda x, _: f"{x:g}s"))
     ax.set_xlim(0.45, 220)
     ax.set_ylim(95, 180)
 
-    # Minimal instance legend built with native markers.
     for instance, marker, y in [("medium", "o", 0.93), ("large-demo", "s", 0.88)]:
-        ax.scatter([0.02], [y], transform=ax.transAxes, s=80, marker=marker, color=MUTED, clip_on=False)
-        ax.text(0.045, y, instance, transform=ax.transAxes, va="center", color=MUTED, fontsize=11)
+        ax.scatter([0.02], [y], transform=ax.transAxes, s=55, marker=marker, color=MUTED, clip_on=False)
+        ax.text(0.045, y, instance, transform=ax.transAxes, va="center", color=MUTED, fontsize=9.5)
 
-    save(fig, "chart_experiment_tradeoff.png")
+    save(fig, "report_experiment_tradeoff.png")
 
 
 def chart_final_sb_vs_lower_bound() -> None:
@@ -198,9 +192,9 @@ def chart_final_sb_vs_lower_bound() -> None:
     x = np.arange(len(labels))
     width = 0.34
 
-    fig, ax = plt.subplots(figsize=(13.6, 7.65))
+    fig, ax = plt.subplots(figsize=(10.8, 6.0))
     ax.bar(x - width / 2, lb, width, label="LB-Schönheim", color=SLATE, alpha=0.85)
-    ax.bar(x + width / 2, sb, width, label="|SB| greedy", color=CYAN, alpha=0.95)
+    ax.bar(x + width / 2, sb, width, label=r"$|SB|$ greedy", color=CYAN, alpha=0.95)
     ax.set_yscale("log")
     ax.set_xticks(x, labels)
     ax.set_ylabel("Quantidade de conjuntos (escala log)")
@@ -208,11 +202,11 @@ def chart_final_sb_vs_lower_bound() -> None:
     ax.legend(frameon=False, labelcolor=TEXT, loc="upper right")
 
     for xpos, value in zip(x - width / 2, lb):
-        ax.text(xpos, value * 1.08, f"{value:,}".replace(",", "."), ha="center", va="bottom", color=MUTED, fontsize=10)
+        ax.text(xpos, value * 1.08, f"{value:,}".replace(",", "."), ha="center", va="bottom", color=MUTED, fontsize=8.5)
     for xpos, value in zip(x + width / 2, sb):
-        ax.text(xpos, value * 1.08, f"{value:,}".replace(",", "."), ha="center", va="bottom", color=TEXT, fontsize=10)
+        ax.text(xpos, value * 1.08, f"{value:,}".replace(",", "."), ha="center", va="bottom", color=TEXT, fontsize=8.5)
 
-    save(fig, "chart_final_sb_vs_lower_bound.png")
+    save(fig, "report_final_sb_vs_lower_bound.png")
 
 
 def chart_updates_per_iteration() -> None:
@@ -220,10 +214,10 @@ def chart_updates_per_iteration() -> None:
     values = [row["updates"] for row in FINAL_RESULTS]
     colors = [CYAN, CYAN, AMBER, RED]
 
-    fig, ax = plt.subplots(figsize=(13.6, 7.65))
+    fig, ax = plt.subplots(figsize=(10.8, 6.0))
     bars = ax.bar(labels, values, color=colors, width=0.58, alpha=0.95)
     ax.set_yscale("log")
-    ax.set_ylabel("Atualizações de count[] por iteração (escala log)")
+    ax.set_ylabel(r"Atualizações de $count[]$ por iteração (escala log)")
     style_axes(ax, ygrid=True, xgrid=False)
 
     for bar, value in zip(bars, values):
@@ -234,11 +228,11 @@ def chart_updates_per_iteration() -> None:
             ha="center",
             va="bottom",
             color=TEXT,
-            fontsize=12,
+            fontsize=10,
             fontweight="bold",
         )
 
-    save(fig, "chart_updates_per_iteration.png")
+    save(fig, "report_updates_per_iteration.png")
 
 
 def chart_parallel_speedup() -> None:
@@ -246,7 +240,7 @@ def chart_parallel_speedup() -> None:
     values = [80.0, 18.7]
     colors = [SLATE, GREEN]
 
-    fig, ax = plt.subplots(figsize=(13.6, 7.65))
+    fig, ax = plt.subplots(figsize=(10.8, 6.0))
     bars = ax.bar(labels, values, color=colors, width=0.46, alpha=0.95)
     ax.set_ylabel("Tempo observado (segundos)")
     style_axes(ax, ygrid=True, xgrid=False)
@@ -260,41 +254,26 @@ def chart_parallel_speedup() -> None:
             ha="center",
             va="bottom",
             color=TEXT,
-            fontsize=14,
+            fontsize=11,
             fontweight="bold",
         )
 
     ax.annotate(
-        "speedup ≈ 4,3×",
+        r"speedup $\approx 4{,}3\times$",
         xy=(1, 18.7),
-        xytext=(0.47, 52),
-        arrowprops={"arrowstyle": "->", "color": GREEN, "lw": 1.6},
+        xytext=(0.43, 52),
+        arrowprops={"arrowstyle": "->", "color": GREEN, "lw": 1.5},
         color=GREEN,
-        fontsize=15,
+        fontsize=12,
         fontweight="bold",
     )
 
-    save(fig, "chart_parallel_speedup.png")
+    save(fig, "report_parallel_speedup.png")
 
 
 def main() -> None:
     configure_matplotlib()
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
-    TITLE_MAP_PATH.write_text(
-        """# Títulos originais dos gráficos
-
-Use estes textos como títulos dos slides, não dentro dos gráficos.
-
-| Arquivo do gráfico | Título sugerido do slide | Subtítulo/contexto sugerido |
-|---|---|---|
-| `chart_experiment_runtime_log.png` | Stochastic Greedy concentra o maior ganho de tempo | Comparação entre abordagens experimentais em instâncias reduzidas |
-| `chart_experiment_tradeoff.png` | O melhor compromisso medido fica no Stochastic Greedy | Mais à esquerda é mais rápido; mais abaixo é solução menor |
-| `chart_final_sb_vs_lower_bound.png` | O greedy fica perto dos lower bounds combinatórios | Comparação final para C(25,15,p) |
-| `chart_updates_per_iteration.png` | p=11 é menor no resultado, mas domina o custo por iteração | A = C(15,p) × C(25-p,15-p) |
-| `chart_parallel_speedup.png` | Paralelismo reduziu a geração dos conjuntos em 4,3× | Geração independente de S15, S14, S13, S12 e S11 |
-""",
-        encoding="utf-8",
-    )
     chart_experiment_runtime_log()
     chart_experiment_tradeoff()
     chart_final_sb_vs_lower_bound()
